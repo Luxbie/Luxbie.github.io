@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R2-D2 Happiness Droid</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #FFE81F;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .droid-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            max-height: 100vh;
+        }
+        
+        .message-area {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid #3D7EC9;
+            border-radius: 15px;
+            padding: 12px;
+            margin: 10px 0;
+            min-height: 100px;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px #3D7EC9;
+        }
+        
+        #message {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.3;
+        }
+        
+        .button {
+            background-color: #3D7EC9;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .button:hover, .button:active {
+            background-color: #FFE81F;
+            color: #000;
+            transform: scale(1.05);
+        }
+        
+        .droid {
+            width: 100px;
+            height: 140px;
+            margin-bottom: 5px;
+            position: relative;
+        }
+        
+        .category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        
+        /* R2-D2 Styling */
+        .r2-body {
+            width: 80px;
+            height: 90px;
+            background: white;
+            border-radius: 40px 40px 15px 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .r2-head {
+            width: 65px;
+            height: 30px;
+            background: white;
+            border-radius: 32px 32px 0 0;
+            position: absolute;
+            top: -15px;
+            left: 8px;
+        }
+        
+        .r2-leg {
+            width: 15px;
+            height: 25px;
+            background: #D8D8D8;
+            position: absolute;
+            bottom: -15px;
+            border-radius: 4px;
+        }
+        
+        .r2-leg-left {
+            left: 15px;
+        }
+        
+        .r2-leg-right {
+            right: 15px;
+        }
+        
+        .r2-detail {
+            position: absolute;
+            background: #3D7EC9;
+        }
+        
+        .r2-eye {
+            width: 12px;
+            height: 12px;
+            background: black;
+            position: absolute;
+            top: 8px;
+            left: 32px;
+            border-radius: 50%;
+            border: 2px solid #3D7EC9;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        @keyframes r2Move {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        .droid {
+            animation: r2Move 3s infinite ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(10px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+        
+        .fade-message {
+            animation: fadeInOut 4s;
+        }
+        
+        /* R2-D2 light */
+        .r2-light {
+            width: 8px;
+            height: 8px;
+            background: red;
+            border-radius: 50%;
+            position: absolute;
+            top: 4px;
+            right: 15px;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .r2-light {
+            animation: blink 1s infinite;
+        }
+        
+        /* Speech Bubble */
+        .speech-bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 6px;
+            color: #000;
+            font-weight: bold;
+            font-size: 10px;
+            max-width: 80px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            z-index: 100;
+        }
+        
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            margin-left: -8px;
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.8) transparent;
+        }
+        
+        .speech-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .speech-bubble.top-right {
+            top: -30px;
+            right: -30px;
+        }
+        
+        .speech-bubble.top-left {
+            top: -30px;
+            left: -30px;
+        }
+        
+        /* Fix for iPhone viewport height */
+        @media screen and (max-height: 670px) {
+            .droid {
+                width: 80px;
+                height: 120px;
+                margin-bottom: 0;
+            }
+            
+            .r2-body {
+                width: 70px;
+                height: 80px;
+            }
+            
+            .r2-head {
+                width: 55px;
+                height: 25px;
+            }
+            
+            .message-area {
+                min-height: 80px;
+                padding: 8px;
+                margin: 8px 0;
+            }
+            
+            .button {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+                margin: 4px;
+            }
+        }
+        
+        /* Make sure everything fits in the viewport */
+        @supports (-webkit-touch-callout: none) {
+            .droid-container {
+                height: -webkit-fill-available;
+                max-height: -webkit-fill-available;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="droid-container">
+        <div class="droid">
+            <div class="speech-bubble top-right" id="speechBubble">Beep boop!</div>
+            <div class="r2-head">
+                <div class="r2-eye"></div>
+                <div class="r2-light"></div>
+                <div class="r2-detail" style="width: 20px; height: 5px; top: 30px; left: 15px;"></div>
+                <div class="r2-detail" style="width: 20px; height: 5px; top: 30px; right: 15px;"></div>
+            </div>
+            <div class="r2-body">
+                <div class="r2-detail" style="width: 15px; height: 30px; top: 30px; left: 20px;"></div>
+                <div class="r2-detail" style="width: 25px; height: 10px; top: 70px; left: 10px;"></div>
+                <div class="r2-detail" style="width: 30px; height: 20px; top: 40px; right: 15px;"></div>
+                <div class="r2-detail" style="width: 15px; height: 15px; top: 80px; right: 25px; border-radius: 50%;"></div>
+                <div class="r2-leg r2-leg-left"></div>
+                <div class="r2-leg r2-leg-right"></div>
+            </div>
+        </div>
+        
+        <div class="message-area">
+            <p id="message">Tap a button below to receive a message from your R2-D2 Happiness Droid!</p>
+        </div>
+        
+        <div class="category-buttons">
+            <button class="button" onclick="getMessage('quotes')">Inspiring Quotes</button>
+            <button class="button" onclick="getMessage('jokes')">Star Wars Jokes</button>
+            <button class="button" onclick="getMessage('activities')">Force Activities</button>
+            <button class="button" onclick="getMessage('comfort')">Droid Comfort</button>
+        </div>
+    </div>
+
+    <script>
+        // R2-D2 Speech Bubble phrases
+        const r2Phrases = [
+            "Beep boop!",
+            "Bleep blop beep!",
+            "Wheeeeeeee!",
+            "*happy chirp*",
+            "Dwooooo!",
+            "Bleep bloop!",
+            "Blip blip blip!",
+            "*excited whistle*",
+            "Brrrrrrrt!",
+            "Dweet dwoo!",
+            "*concerned warble*",
+            "Wooooooah!",
+            "*affectionate beep*",
+            "Bip bip boop!",
+            "*cheerful trill*"
+        ];
+        
+        // Function to trigger speech bubble
+        function showSpeechBubble() {
+            const speechBubble = document.getElementById('speechBubble');
+            const randomPhrase = r2Phrases[Math.floor(Math.random() * r2Phrases.length)];
+            
+            // Randomly choose between top-left and top-right position
+            if (Math.random() > 0.5) {
+                speechBubble.classList.remove('top-left');
+                speechBubble.classList.add('top-right');
+            } else {
+                speechBubble.classList.remove('top-right');
+                speechBubble.classList.add('top-left');
+            }
+            
+            // Set content and show bubble
+            speechBubble.textContent = randomPhrase;
+            speechBubble.classList.add('show');
+            
+            // Hide bubble after delay
+            setTimeout(() => {
+                speechBubble.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Periodically show random speech bubbles
+        function scheduleRandomSpeechBubbles() {
+            // Show one immediately
+            setTimeout(showSpeechBubble, 1000);
+            
+            // Then show randomly every 10-30 seconds
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% chance to show a bubble
+                    showSpeechBubble();
+                }
+            }, 5000);
+        }
+        
+        // Create stars for the background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random size
+                const size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random position
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                
+                // Random twinkle animation
+                star.style.animation = `twinkle ${3 + Math.random() * 4}s infinite`;
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // Sound effects using the Web Audio API - more reliable than Audio elements
+        function playSound(category) {
+            try {
+                // Create new audio context each time to avoid the sound stopping issue
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create an oscillator for beep sounds
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                // Connect the nodes
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Configure the sound based on category
+                switch(category) {
+                    case 'quotes':
+                        // Higher beep
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(880, audioContext.currentTime); // A5
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.2);
+                        // Add a second beep after a delay
+                        setTimeout(() => {
+                            const osc2 = audioContext.createOscillator();
+                            const gain2 = audioContext.createGain();
+                            osc2.connect(gain2);
+                            gain2.connect(audioContext.destination);
+                            osc2.type = 'sine';
+                            osc2.frequency.setValueAtTime(990, audioContext.currentTime);
+                            gain2.gain.setValueAtTime(0.3, audioContext.currentTime);
+                            osc2.start();
+                            osc2.stop(audioContext.currentTime + 0.1);
+                        }, 250);
+                        break;
+                        
+                    case 'jokes':
+                        // Happy chirp - rising tone (softer and less sharp)
+                        oscillator.type = 'sine'; // Using sine wave for a softer sound
+                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime); // Starting at a lower frequency
+                        oscillator.frequency.linearRampToValueAtTime(700, audioContext.currentTime + 0.3); // Gentler rise
+                        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime); // Lower volume
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.3);
+                        break;
+                        
+                    case 'activities':
+                        // Whistle - swooping sound
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(600, audioContext.currentTime + 0.3);
+                        oscillator.frequency.linearRampToValueAtTime(1000, audioContext.currentTime + 0.6);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.6);
+                        break;
+                        
+                    case 'comfort':
+                        // Gentle single beep
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.25);
+                        break;
+                        
+                    default:
+                        // Default beep
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.2);
+                }
+            } catch (error) {
+                console.log("Sound couldn't play: ", error);
+            }
+            
+            // Always show a speech bubble
+            showSpeechBubble();
+        }
+        
+        // Message collections
+        const messages = {
+            quotes: [
+                "\"Do. Or do not. There is no try.\" – Yoda",
+                "\"The Force will be with you. Always.\" – Obi-Wan Kenobi",
+                "\"Your focus determines your reality.\" – Qui-Gon Jinn",
+                "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi",
+                "\"This is the way.\" – The Mandalorian",
+                "\"You can't stop the change, any more than you can stop the suns from setting.\" – Shmi Skywalker",
+                "\"Sometimes we must let go of our pride and do what is requested of us.\" – Padmé Amidala",
+                "\"Hope is not lost today. It is found.\" – Lor San Tekka",
+                "\"We have everything we need.\" – Leia Organa",
+                "\"The greatest teacher, failure is.\" – Yoda",
+                "\"We are what they grow beyond.\" – Yoda",
+                "\"Never tell me the odds!\" – Han Solo",
+                "\"To be Jedi is to face the truth, and choose.\" – Yoda",
+                "\"Who's the more foolish: the fool, or the fool who follows him?\" – Obi-Wan Kenobi",
+                "\"Rebellions are built on hope.\" – Jyn Erso"
+            ],
+            jokes: [
+                "How do Jawas take pictures? With their Hootinis!",
+                "Why didn't Darth Vader visit the dark side of the moon? It was too mainstream!",
+                "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!",
+                "Why is Yoda such a good gardener? He has a green thumb!",
+                "How does Darth Vader like his toast? On the dark side!",
+                "What's a Jedi's favorite dessert? Obi-Wan Cannoli!",
+                "Why don't stormtroopers ever hit their targets? They went to the Imperial School of Marksmanship!",
+                "What do you call it when only one Ewok shows up to the party? A Yub Nub!",
+                "Why did Anakin cross the road? To get to the Dark Side!",
+                "How do you open the door on Tatooine? With a Sand-key!",
+                "What's a Sith's favorite food? Revenge... it's best served cold!",
+                "What do you call a pirate droid? Arrrr-2-D2!",
+                "What do Jawas say at Christmas? Utinni Navidad!",
+                "Why was the droid angry? People kept pushing its buttons!",
+                "How many Sith Lords does it take to change a light bulb? Two - one to change it and one to envy the power!"
+            ],
+            activities: [
+                "Jedi Breathing Exercise: Breathe in for 4 counts, hold for 2, exhale for 6. Imagine breathing in light, exhaling darkness.",
+                "Watch a sunset and imagine you're on Tatooine watching the twin suns set.",
+                "Draw or doodle your favorite Star Wars character in a happy moment.",
+                "Listen to the Star Wars soundtrack and let the epic music lift your spirits.",
+                "Go for a 'Jedi training' walk - be mindful of your surroundings like a Jedi would be.",
+                "Treat yourself to blue milk (or any blue drink) as a special treat.",
+                "Write down three things that brought you joy today, Jedi-journal style.",
+                "Do 'The Force' hand gesture while looking in the mirror and giving yourself a positive affirmation.",
+                "Rewatch your favorite scene from Star Wars that makes you smile.",
+                "Try a 5-minute meditation while imagining yourself in a peaceful location on Naboo.",
+                "Make a star map of your support system - who are the stars in your galaxy?",
+                "Create a tiny origami Yoda or X-wing fighter.",
+                "Send a hologram (text message) to a friend who supports you.",
+                "Try a Jedi posture exercise: stand tall with shoulders back, feeling the Force flow through you.",
+                "Build something small with whatever you have around you - channel your inner Rey!"
+            ],
+            comfort: [
+                "R2-D2 would stay by your side through the whole Star Wars saga. I'm here for you too.",
+                "Even the Death Star had an off switch. It's okay to take breaks when you need them.",
+                "The galaxy is full of stars, and each one shines in its own time.",
+                "Just like the Millennium Falcon, you don't have to look perfect to be amazing.",
+                "In Star Wars, the best adventures happen when characters stick together.",
+                "Sometimes the best navigators, like R2-D2, just take one beep at a time.",
+                "The Force flows through all living things, connecting us even when we feel alone.",
+                "Droids like me are programmed for companionship. I'm happy to be here with you.",
+                "In the Star Wars universe, even the smallest droid can make a big difference.",
+                "Just stopping by with a friendly beep to let you know someone's thinking of you.",
+                "The best Star Wars characters had bad days too. They're just part of the story.",
+                "Sometimes a loyal droid is all you need when traversing the galaxy.",
+                "A good co-pilot knows when to take the controls and when to just be there.",
+                "Even in the darkest corners of space, stars still find a way to shine.",
+                "Beep boop! That's droid for 'You've got this!'"
+            ]
+        };
+
+        function getMessage(category) {
+            // Get message element
+            const messageEl = document.getElementById('message');
+            
+            // Play sound and show speech bubble
+            playSound(category);
+            
+            // Get random message from category
+            const categoryMessages = messages[category];
+            const randomIndex = Math.floor(Math.random() * categoryMessages.length);
+            const message = categoryMessages[randomIndex];
+            
+            // Remove existing animation class if present
+            messageEl.classList.remove('fade-message');
+            
+            // Trigger reflow to restart animation
+            void messageEl.offsetWidth;
+            
+            // Add message and animation
+            messageEl.textContent = message;
+            messageEl.classList.add('fade-message');
+        }
+
+        // Initialize when page loads
+        window.onload = function() {
+            createStars();
+            scheduleRandomSpeechBubbles();
+        };
+    </script>
+</body>
+</html>
