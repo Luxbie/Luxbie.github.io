@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R2-D2 Happiness Droid</title>
+    <title>R2-D2 Companion</title>
     <style>
         body {
             background-color: #000;
@@ -83,6 +83,8 @@
             height: 140px;
             margin-bottom: 5px;
             position: relative;
+            cursor: pointer;
+            user-select: none;
         }
         
         .category-buttons {
@@ -185,15 +187,12 @@
             position: absolute;
             top: 4px;
             right: 15px;
+            animation: blink 1s infinite;
         }
         
         @keyframes blink {
             0%, 100% { opacity: 0.3; }
             50% { opacity: 1; }
-        }
-        
-        .r2-light {
-            animation: blink 1s infinite;
         }
         
         /* Speech Bubble */
@@ -236,6 +235,15 @@
         .speech-bubble.top-left {
             top: -30px;
             left: -30px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
         }
         
         /* Fix for iPhone viewport height */
@@ -282,7 +290,7 @@
     <div class="stars" id="stars"></div>
     
     <div class="droid-container">
-        <div class="droid">
+        <div class="droid" id="r2d2-droid">
             <div class="speech-bubble top-right" id="speechBubble">Beep boop!</div>
             <div class="r2-head">
                 <div class="r2-eye"></div>
@@ -301,18 +309,22 @@
         </div>
         
         <div class="message-area">
-            <p id="message">Tap a button below to receive a message from your R2-D2 Happiness Droid!</p>
+            <p id="message">Hello! I'm R2-D2, your friendly Star Wars companion. Tap a button below for a message!</p>
         </div>
         
         <div class="category-buttons">
             <button class="button" onclick="getMessage('quotes')">Inspiring Quotes</button>
             <button class="button" onclick="getMessage('jokes')">Star Wars Jokes</button>
-            <button class="button" onclick="getMessage('activities')">Force Activities</button>
+            <button class="button" onclick="getMessage('facts')">Star Wars Facts</button>
             <button class="button" onclick="getMessage('comfort')">Droid Comfort</button>
         </div>
     </div>
 
     <script>
+        // Variables to track taps on the droid
+        let tapCount = 0;
+        let lastTapTime = 0;
+        
         // R2-D2 Speech Bubble phrases
         const r2Phrases = [
             "Beep boop!",
@@ -369,29 +381,188 @@
             }, 5000);
         }
         
-        // Create stars for the background
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const starCount = 100;
+        // Message collections
+        const messages = {
+            quotes: [
+                "\"Do. Or do not. There is no try.\" – Yoda",
+                "\"The Force will be with you. Always.\" – Obi-Wan Kenobi",
+                "\"Your focus determines your reality.\" – Qui-Gon Jinn",
+                "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi",
+                "\"This is the way.\" – The Mandalorian",
+                "\"You can't stop the change, any more than you can stop the suns from setting.\" – Shmi Skywalker",
+                "\"Sometimes we must let go of our pride and do what is requested of us.\" – Padmé Amidala",
+                "\"Hope is not lost today. It is found.\" – Lor San Tekka",
+                "\"We have everything we need.\" – Leia Organa",
+                "\"The greatest teacher, failure is.\" – Yoda",
+                "\"We are what they grow beyond.\" – Yoda",
+                "\"Never tell me the odds!\" – Han Solo",
+                "\"To be Jedi is to face the truth, and choose.\" – Yoda",
+                "\"Who's the more foolish: the fool, or the fool who follows him?\" – Obi-Wan Kenobi",
+                "\"Rebellions are built on hope.\" – Jyn Erso",
+                "\"Always pass on what you have learned.\" – Yoda",
+                "\"The ability to speak does not make you intelligent.\" – Qui-Gon Jinn",
+                "\"I find your lack of faith disturbing.\" – Darth Vader",
+                "\"Let the past die. Kill it if you have to.\" – Kylo Ren",
+                "\"You know, no matter how much we fought, I've always hated watching you leave.\" – Leia to Han",
+                "\"I am a Jedi, like my father before me.\" – Luke Skywalker",
+                "\"Strike me down in anger and I'll always be with you, just like your father.\" – Luke to Kylo Ren",
+                "\"I'm just a simple man trying to make my way in the universe.\" – Jango Fett",
+                "\"You have failed, Your Highness. I am a Jedi, like my father before me.\" – Luke to the Emperor",
+                "\"Be careful not to choke on your aspirations, Director.\" – Darth Vader",
+                "\"Help me, Obi-Wan Kenobi. You're my only hope.\" – Princess Leia",
+                "\"The Force is strong in my family. My father has it. I have it. My sister has it.\" – Luke Skywalker",
+                "\"Many of the truths that we cling to depend on our viewpoint.\" – Obi-Wan Kenobi",
+                "\"Power! Unlimited power!\" – Emperor Palpatine",
+                "\"Every word of what you just said was wrong.\" – Luke to Kylo Ren"
+            ],
+            jokes: [
+                "How do Jawas take pictures? With their Hootinis!",
+                "Why didn't Darth Vader visit the dark side of the moon? It was too mainstream!",
+                "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!",
+                "Why is Yoda such a good gardener? He has a green thumb!",
+                "How does Darth Vader like his toast? On the dark side!",
+                "What's a Jedi's favorite dessert? Obi-Wan Cannoli!",
+                "Why don't stormtroopers ever hit their targets? They went to the Imperial School of Marksmanship!",
+                "What do you call it when only one Ewok shows up to the party? A Yub Nub!",
+                "Why did Anakin cross the road? To get to the Dark Side!",
+                "How do you open the door on Tatooine? With a Sand-key!",
+                "What's a Sith's favorite food? Revenge... it's best served cold!",
+                "What do you call a pirate droid? Arrrr-2-D2!",
+                "What do Jawas say at Christmas? Utinni Navidad!",
+                "Why was the droid angry? People kept pushing its buttons!",
+                "How many Sith Lords does it take to change a light bulb? Two - one to change it and one to envy the power!",
+                "What's Darth Vader's favorite day of the week? Fry-day!",
+                "What do you call Chewbacca when he's covered in chocolate? A chocolate chip Wookiee!",
+                "How do you get a one-armed Wookiee out of a tree? You wave!",
+                "Why did the Stormtrooper buy an iPhone? He couldn't find the droid he was looking for.",
+                "What do you call a bounty hunter who likes to cook? Boba Fett-uccine.",
+                "Why does Princess Leia keep her hair in buns? So it doesn't Hang Solo.",
+                "What's a Jedi's favorite Italian dish? Qui-Gon Gnocchi.",
+                "What did the rancor say after eating a clown? 'That tasted funny!'",
+                "Why can't you borrow money from a Jawa? Because they're always short-changing everyone!",
+                "What's a Jedi's favorite car? A Toy-Yoda.",
+                "What kind of music do Jawas listen to? Jawa Rock!",
+                "What's a Sith Lord's favorite candy? Darth Maulers.",
+                "Why did Yoda refuse to get a smartphone? Too many attachments, he feared.",
+                "Why don't Banthas use computers? They're afraid of the mouse!",
+                "What's Admiral Ackbar's favorite type of music? It's a trap!"
+            ],
+            facts: [
+                "The lightsaber sound effect was created by combining the hum of an old TV set with the buzz of a film projector motor.",
+                "Yoda was almost played by a monkey carrying a cane and wearing a mask.",
+                "The Millennium Falcon's design was inspired by a hamburger with an olive on the side.",
+                "Darth Vader's breathing was recorded using a scuba regulator.",
+                "R2-D2's name comes from sound editor Walter Murch asking for 'Reel 2, Dialog Track 2' during American Graffiti, which was abbreviated as 'R2-D2'.",
+                "C-3PO is fluent in over 6 million forms of communication.",
+                "The original trilogy's Storm Trooper armor was made of plastic and vacuum-formed over plaster casts.",
+                "Mark Hamill held his breath for so long during the trash compactor scene that he burst a blood vessel in his face. Shots had to be adjusted to hide it.",
+                "The language spoken by the Jawas is a sped-up version of the Zulu language.",
+                "George Lucas sold Lucasfilm to Disney for $4.05 billion in 2012.",
+                "*Legends: Boba Fett once fought Darth Vader to a standstill in a lightsaber duel, using Mandalorian armor and weaponry.",
+                "*Legends: Luke Skywalker fell to the dark side briefly when he joined the resurrected Emperor Palpatine.",
+                "*Legends: Han Solo was once an Imperial officer before deserting to save Chewbacca from slavery.",
+                "*Legends: Darth Maul survived being cut in half and gained cybernetic legs. (This later became canon!)",
+                "*Legends: The Yuuzhan Vong were an extragalactic species immune to the Force who invaded the galaxy.",
+                "The sound of TIE fighters screaming in space was created by combining an elephant call with a car driving on wet pavement.",
+                "The word 'Ewok' is never actually spoken in the original trilogy.",
+                "Yoda's species has never been named in canon, maintaining the mystery around the character.",
+                "The actors inside the Stormtrooper costumes in the original film couldn't sit down while wearing their armor.",
+                "Chewbacca's voice was created by mixing the sounds of bears, walruses, lions, and other animals.",
+                "The Death Star in A New Hope was a model about the size of a beach ball.",
+                "*Legends: Darth Plagueis, Palpatine's master, could use the Force to create life and prevent death.",
+                "*Legends: There was a species called the Ssi-ruuk that could drain the life force from beings and transfer it into machines.",
+                "*Legends: A sentient planet named Zonama Sekot had the ability to grow living ships.",
+                "The howl of the TIE fighter was created by mixing an elephant's call with a car driving on wet pavement.",
+                "The bounty hunter Bossk's costume was actually a recycled spacesuit from Doctor Who.",
+                "The original Millennium Falcon design was later repurposed as the Tantive IV (Princess Leia's ship).",
+                "The AT-AT walkers' movement was inspired by studying elephants.",
+                "*Legends: Sith could create Force storms capable of destroying entire fleets of starships.",
+                "*Legends: A Jedi named Dorsk 81 was a clone who was the 81st copy of the original Dorsk."
+            ],
+            comfort: [
+                "R2-D2 would stay by your side through the whole Star Wars saga. I'm here for you too.",
+                "Even the Death Star had an off switch. It's okay to take breaks when you need them.",
+                "The galaxy is full of stars, and each one shines in its own time.",
+                "Just like the Millennium Falcon, you don't have to look perfect to be amazing.",
+                "In Star Wars, the best adventures happen when characters stick together.",
+                "Sometimes the best navigators, like R2-D2, just take one beep at a time.",
+                "The Force flows through all living things, connecting us even when we feel alone.",
+                "Droids like me are programmed for companionship. I'm happy to be here with you.",
+                "In the Star Wars universe, even the smallest droid can make a big difference.",
+                "Just stopping by with a friendly beep to let you know someone's thinking of you.",
+                "The best Star Wars characters had bad days too. They're just part of the story.",
+                "Sometimes a loyal droid is all you need when traversing the galaxy.",
+                "A good co-pilot knows when to take the controls and when to just be there.",
+                "Even in the darkest corners of space, stars still find a way to shine.",
+                "Beep boop! That's droid for 'You've got this!'",
+                "The Force doesn't have a light side or dark side - it's how we use it that matters. Your strength can be used however you choose.",
+                "Just like how Luke had to go to Dagobah to find himself, sometimes our journeys take us to unexpected places.",
+                "The galaxy is vast, but never empty. You're never truly alone in this universe.",
+                "Remember how R2-D2 kept going even when separated from his friends? You have that same resilience.",
+                "Even the most fearsome Rancor has someone who cares about it.",
+                "Not all heroes wear Jedi robes. Some just show up when they're needed most.",
+                "Luke couldn't lift his X-Wing at first either. Growth takes time and patience.",
+                "The Millennium Falcon may be a 'piece of junk' but it's the fastest ship in the galaxy. Don't judge by appearances.",
+                "Today might feel like Hoth - cold and harsh - but Endor's celebration is in your future.",
+                "Star Wars taught us that hope remains even in the darkest times. The light will return.",
+                "Sometimes we all need a Cantina break before the next adventure.",
+                "Beep-bloop-bleep! (Translation: I believe in you, human friend.)",
+                "Every Jedi Master started as a Padawan. Every journey has its beginning.",
+                "Just like carbonite freezing, hard times are temporary.",
+                "The Force will be with you, always - and so will the people who care about you."
+            ],
+            love: [
+                "I love you more than Han loves the Millennium Falcon!",
+                "My love for you is a puzzle… for which I have no answers. I can't control it… and now I don't care. I truly, deeply love you.",
+                "You're exactly the way I remember you in my dreams.",
+                "You're the Leia to my Han",
+                "I truly, deeply love you. Before we die I want you to know.",
+                "You make my heart beat faster than the Millennium Falcon on the Kessel Run.",
+                "Compassion, which I would define as unconditional love, is essential to a Jedi's life. So you might say, that we are encouraged to love.",
+                "In all the planets, in all the systems, in all the galaxy, I found you.",
+                "Nothing's gonna change the way I look at you.",
+                "The Force brought us together, and nothing could pull us apart.",
+                "Someone who loves you.",
+                "I'd rather face a Sarlacc pit than spend a day without you.",
+                "You're so…beautiful.",
+                "I love you",
+                "I know",
+                "You're my favorite person in this galaxy or any galaxy far, far away.",
+                "You've made the Kessel Run straight into my heart.",
+                "I'd cross the deserts of Tatooine just to be with you.",
+                "Hold me. Like you did by the lake on Naboo, so long ago, when there was nothing but our love.",
+                "You're the missing piece to my droid circuitry.",
+                "Together, we could rule the galaxy... or just enjoy movie night.",
+                "I don't need to search the galaxy - I've found my home with you.",
+                "You know, no matter how much we fought, I always hated watching you leave."
+            ],
+        };
+
+        function getMessage(category) {
+            // Get message element
+            const messageEl = document.getElementById('message');
             
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                
-                // Random size
-                const size = Math.random() * 3;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                
-                // Random position
-                star.style.top = Math.random() * 100 + '%';
-                star.style.left = Math.random() * 100 + '%';
-                
-                // Random twinkle animation
-                star.style.animation = `twinkle ${3 + Math.random() * 4}s infinite`;
-                star.style.animationDelay = Math.random() * 5 + 's';
-                
-                starsContainer.appendChild(star);
+            // Play sound and show speech bubble
+            playSound(category);
+            
+            // Get random message from category
+            const categoryMessages = messages[category];
+            const randomIndex = Math.floor(Math.random() * categoryMessages.length);
+            const message = categoryMessages[randomIndex];
+            
+            // Remove existing animation class if present
+            messageEl.classList.remove('fade-message');
+            
+            // Trigger reflow to restart animation
+            void messageEl.offsetWidth;
+            
+            // Add message and animation
+            messageEl.textContent = message;
+            messageEl.classList.add('fade-message');
+            
+            // For love messages, add a special heart emoji
+            if (category === 'love') {
+                messageEl.innerHTML = '❤️ ' + message + ' ❤️';
             }
         }
         
@@ -442,15 +613,15 @@
                         oscillator.stop(audioContext.currentTime + 0.3);
                         break;
                         
-                    case 'activities':
+                    case 'facts':
                         // Whistle - swooping sound
                         oscillator.type = 'sine';
-                        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime);
-                        oscillator.frequency.linearRampToValueAtTime(600, audioContext.currentTime + 0.3);
-                        oscillator.frequency.linearRampToValueAtTime(1000, audioContext.currentTime + 0.6);
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(700, audioContext.currentTime + 0.2);
+                        oscillator.frequency.linearRampToValueAtTime(900, audioContext.currentTime + 0.4);
                         gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
                         oscillator.start();
-                        oscillator.stop(audioContext.currentTime + 0.6);
+                        oscillator.stop(audioContext.currentTime + 0.4);
                         break;
                         
                     case 'comfort':
@@ -460,6 +631,30 @@
                         gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
                         oscillator.start();
                         oscillator.stop(audioContext.currentTime + 0.25);
+                        break;
+                        
+                    case 'love':
+                        // Special love sound - musical and sweet
+                        oscillator.type = 'sine';
+                        oscillator.frequency.setValueAtTime(500, audioContext.currentTime);
+                        oscillator.frequency.linearRampToValueAtTime(700, audioContext.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.2);
+                        
+                        // Second note after short delay
+                        setTimeout(() => {
+                            const osc2 = audioContext.createOscillator();
+                            const gain2 = audioContext.createGain();
+                            osc2.connect(gain2);
+                            gain2.connect(audioContext.destination);
+                            osc2.type = 'sine';
+                            osc2.frequency.setValueAtTime(700, audioContext.currentTime);
+                            osc2.frequency.linearRampToValueAtTime(900, audioContext.currentTime + 0.3);
+                            gain2.gain.setValueAtTime(0.2, audioContext.currentTime);
+                            osc2.start();
+                            osc2.stop(audioContext.currentTime + 0.3);
+                        }, 250);
                         break;
                         
                     default:
@@ -478,100 +673,64 @@
             showSpeechBubble();
         }
         
-        // Message collections
-        const messages = {
-            quotes: [
-                "\"Do. Or do not. There is no try.\" – Yoda",
-                "\"The Force will be with you. Always.\" – Obi-Wan Kenobi",
-                "\"Your focus determines your reality.\" – Qui-Gon Jinn",
-                "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi",
-                "\"This is the way.\" – The Mandalorian",
-                "\"You can't stop the change, any more than you can stop the suns from setting.\" – Shmi Skywalker",
-                "\"Sometimes we must let go of our pride and do what is requested of us.\" – Padmé Amidala",
-                "\"Hope is not lost today. It is found.\" – Lor San Tekka",
-                "\"We have everything we need.\" – Leia Organa",
-                "\"The greatest teacher, failure is.\" – Yoda",
-                "\"We are what they grow beyond.\" – Yoda",
-                "\"Never tell me the odds!\" – Han Solo",
-                "\"To be Jedi is to face the truth, and choose.\" – Yoda",
-                "\"Who's the more foolish: the fool, or the fool who follows him?\" – Obi-Wan Kenobi",
-                "\"Rebellions are built on hope.\" – Jyn Erso"
-            ],
-            jokes: [
-                "How do Jawas take pictures? With their Hootinis!",
-                "Why didn't Darth Vader visit the dark side of the moon? It was too mainstream!",
-                "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!",
-                "Why is Yoda such a good gardener? He has a green thumb!",
-                "How does Darth Vader like his toast? On the dark side!",
-                "What's a Jedi's favorite dessert? Obi-Wan Cannoli!",
-                "Why don't stormtroopers ever hit their targets? They went to the Imperial School of Marksmanship!",
-                "What do you call it when only one Ewok shows up to the party? A Yub Nub!",
-                "Why did Anakin cross the road? To get to the Dark Side!",
-                "How do you open the door on Tatooine? With a Sand-key!",
-                "What's a Sith's favorite food? Revenge... it's best served cold!",
-                "What do you call a pirate droid? Arrrr-2-D2!",
-                "What do Jawas say at Christmas? Utinni Navidad!",
-                "Why was the droid angry? People kept pushing its buttons!",
-                "How many Sith Lords does it take to change a light bulb? Two - one to change it and one to envy the power!"
-            ],
-            activities: [
-                "Jedi Breathing Exercise: Breathe in for 4 counts, hold for 2, exhale for 6. Imagine breathing in light, exhaling darkness.",
-                "Watch a sunset and imagine you're on Tatooine watching the twin suns set.",
-                "Draw or doodle your favorite Star Wars character in a happy moment.",
-                "Listen to the Star Wars soundtrack and let the epic music lift your spirits.",
-                "Go for a 'Jedi training' walk - be mindful of your surroundings like a Jedi would be.",
-                "Treat yourself to blue milk (or any blue drink) as a special treat.",
-                "Write down three things that brought you joy today, Jedi-journal style.",
-                "Do 'The Force' hand gesture while looking in the mirror and giving yourself a positive affirmation.",
-                "Rewatch your favorite scene from Star Wars that makes you smile.",
-                "Try a 5-minute meditation while imagining yourself in a peaceful location on Naboo.",
-                "Make a star map of your support system - who are the stars in your galaxy?",
-                "Create a tiny origami Yoda or X-wing fighter.",
-                "Send a hologram (text message) to a friend who supports you.",
-                "Try a Jedi posture exercise: stand tall with shoulders back, feeling the Force flow through you.",
-                "Build something small with whatever you have around you - channel your inner Rey!"
-            ],
-            comfort: [
-                "R2-D2 would stay by your side through the whole Star Wars saga. I'm here for you too.",
-                "Even the Death Star had an off switch. It's okay to take breaks when you need them.",
-                "The galaxy is full of stars, and each one shines in its own time.",
-                "Just like the Millennium Falcon, you don't have to look perfect to be amazing.",
-                "In Star Wars, the best adventures happen when characters stick together.",
-                "Sometimes the best navigators, like R2-D2, just take one beep at a time.",
-                "The Force flows through all living things, connecting us even when we feel alone.",
-                "Droids like me are programmed for companionship. I'm happy to be here with you.",
-                "In the Star Wars universe, even the smallest droid can make a big difference.",
-                "Just stopping by with a friendly beep to let you know someone's thinking of you.",
-                "The best Star Wars characters had bad days too. They're just part of the story.",
-                "Sometimes a loyal droid is all you need when traversing the galaxy.",
-                "A good co-pilot knows when to take the controls and when to just be there.",
-                "Even in the darkest corners of space, stars still find a way to shine.",
-                "Beep boop! That's droid for 'You've got this!'"
-            ]
-        };
-
-        function getMessage(category) {
-            // Get message element
-            const messageEl = document.getElementById('message');
+        // Create stars for the background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 100;
             
-            // Play sound and show speech bubble
-            playSound(category);
-            
-            // Get random message from category
-            const categoryMessages = messages[category];
-            const randomIndex = Math.floor(Math.random() * categoryMessages.length);
-            const message = categoryMessages[randomIndex];
-            
-            // Remove existing animation class if present
-            messageEl.classList.remove('fade-message');
-            
-            // Trigger reflow to restart animation
-            void messageEl.offsetWidth;
-            
-            // Add message and animation
-            messageEl.textContent = message;
-            messageEl.classList.add('fade-message');
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random size
+                const size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Random position
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                
+                // Random twinkle animation
+                star.style.animation = `twinkle ${3 + Math.random() * 4}s infinite`;
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                starsContainer.appendChild(star);
+            }
         }
+        
+        // Initialize droid click events
+        document.getElementById('r2d2-droid').addEventListener('click', function(event) {
+            // Prevent the event from bubbling up
+            event.stopPropagation();
+            
+            const now = new Date().getTime();
+            
+            // Reset tap count if more than 1.5 seconds have passed
+            if (now - lastTapTime > 1500) {
+                tapCount = 0;
+            }
+            
+            // Increment tap count and update last tap time
+            tapCount++;
+            lastTapTime = now;
+            
+            // Show a speech bubble for feedback
+            showSpeechBubble();
+            
+            // Check if the secret has been triggered (3 taps)
+            if (tapCount >= 3) {
+                // Trigger the love message and reset counter
+                getMessage('love');
+                tapCount = 0;
+                
+                // Add a little pulse animation to the droid
+                document.getElementById('r2d2-droid').classList.add('pulse');
+                setTimeout(() => {
+                    document.getElementById('r2d2-droid').classList.remove('pulse');
+                }, 1000);
+            }
+        });
 
         // Initialize when page loads
         window.onload = function() {
