@@ -291,6 +291,12 @@
 
         .breathing { animation: breathe-light 4s infinite ease-in-out !important; }
 
+        @keyframes r2-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .r2-head-spin { animation: r2-spin 0.5s ease-in-out; }
+
         .sound-toggle {
             position: fixed;
             top: 15px;
@@ -355,11 +361,10 @@
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="%23999"><path d="M45,30 A10,10 0 1,1 55,30 A10,10 0 1,1 45,30 Z"/><path d="M10,10 H30 V90 H10 Z"/><path d="M70,10 H90 V90 H70 Z"/><path d="M30,48 H70 V52 H30 Z"/></g></svg>');
             background-size: contain;
             background-repeat: no-repeat;
-            opacity: 0.8;
         }
         .star-destroyer {
-            width: 90px; /* Resized */
-            height: 90px; /* Resized */
+            width: 90px;
+            height: 90px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120"><path fill="%23999" d="M50 0 L10 100 L50 80 L90 100 Z" /><path fill="%23ccc" d="M50 10 L20 90 L50 75 L80 90 Z" /><path fill="%23777" d="M45 82 L55 82 L55 95 L45 95 Z" /><path fill="%23bbb" d="M48 40 L52 40 L52 60 L48 60 Z M42 45 L58 45 L58 50 L42 50 Z" /></svg>');
             background-size: contain;
             background-repeat: no-repeat;
@@ -378,6 +383,44 @@
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><g transform="translate(0, 5)"><path d="M50,0 C60,0 70,10 70,20 L95,20 L85,40 L70,40 C70,50 60,60 50,60 C40,60 30,50 30,40 L15,40 L5,20 L30,20 C30,10 40,0 50,0 Z" fill="%23ffd700" /><path d="M50,10 C55,10 60,15 60,20 L60,40 C60,45 55,50 50,50 C45,50 40,45 40,40 L40,20 C40,15 45,10 50,10 Z" fill="%23aaa" /><path d="M95,20 L100,25 L70,25 Z" fill="%23aaa" /><path d="M5,20 L0,25 L30,25 Z" fill="%23aaa" /><path d="M50,60 L50,70 L45,75 L55,75 Z" fill="%23ffd700" /></g></svg>');
             background-size: contain;
             background-repeat: no-repeat;
+        }
+        .millennium-falcon {
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><path fill="%23ccc" d="M50 0 L60 20 H80 L90 30 V50 L80 60 H60 L50 80 L40 60 H20 L10 50 V30 L20 20 H40 Z"/><rect fill="%233D7EC9" x="45" y="15" width="10" height="50" rx="5"/><circle fill="%23333" cx="70" cy="40" r="10"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(-45deg, #fff, rgba(255,255,255,0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #fff);
+            animation: shooting-star-anim 3s ease-in-out forwards;
+        }
+        .sparkle-star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s infinite;
+        }
+        
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 10px #fff; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+
+        @keyframes shooting-star-anim {
+            0% {
+                opacity: 1;
+                transform: translateX(0) translateY(0) rotate(-45deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(200px) translateY(200px) rotate(-45deg);
+            }
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.7; } }
@@ -467,11 +510,68 @@
         const r2Phrases = ["Beep boop!", "Bleep blop beep!", "Wheeeeeeee!", "*happy chirp*", "Dwooooo!", "*excited whistle*", "*concerned warble*", "Wooooooah!", "*affectionate beep*"];
 
         const messages = {
-            quotes: ["\"Do. Or do not. There is no try.\" – Yoda", "\"The Force will be with you. Always.\" – Obi-Wan Kenobi", "\"Your focus determines your reality.\" – Qui-Gon Jinn", "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi", "\"This is the way.\" – The Mandalorian", "\"Hope is not lost today. It is found.\" – Lor San Tekka", "\"We have everything we need.\" – Leia Organa", "\"The greatest teacher, failure is.\" – Yoda", "\"Rebellions are built on hope.\" – Jyn Erso"],
-            jokes: ["How do Jawas take pictures? With their Hootinis!", "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!", "Why is Yoda such a good gardener? He has a green thumb!", "How does Darth Vader like his toast? On the dark side!", "What's a Jedi's favorite dessert? Obi-Wan Cannoli!", "Why did Anakin cross the road? To get to the Dark Side!", "Why was the droid angry? People kept pushing its buttons!"],
-            facts: ["The lightsaber sound effect was created by combining the hum of an old TV set with the buzz of a film projector motor.", "Yoda was almost played by a monkey carrying a cane and wearing a mask.", "The Millennium Falcon's design was inspired by a hamburger with an olive on the side.", "R2-D2's name comes from an abbreviation for 'Reel 2, Dialog Track 2'.", "C-3PO is fluent in over 6 million forms of communication.", "The language spoken by the Jawas is a sped-up version of the Zulu language.", "The sound of TIE fighters was created by combining an elephant call with a car driving on wet pavement.", "Chewbacca's voice was created by mixing the sounds of bears, walruses, and lions."],
-            comfort: ["R2-D2 would stay by your side through the whole saga. I'm here for you too.", "Even the Death Star had an off switch. It's okay to take breaks when you need them.", "The galaxy is full of stars, and each one shines in its own time.", "Just like the Millennium Falcon, you don't have to look perfect to be amazing.", "The Force flows through all living things, connecting us even when we feel alone.", "Droids like me are programmed for companionship. I'm happy to be here with you.", "Even in the darkest corners of space, stars still find a way to shine.", "Beep boop! That's droid for 'You've got this!'", "Today might feel like Hoth, but Endor's celebration is in your future."],
-            love: ["I love you more than Han loves the Millennium Falcon!", "You're the Leia to my Han.", "I truly, deeply love you.", "You make my heart beat faster than the Millennium Falcon on the Kessel Run.", "In all the planets, in all the systems, in all the galaxy, I found you.", "I'd rather face a Sarlacc pit than spend a day without you.", "I love you. I know."]
+            quotes: [
+                "\"Do. Or do not. There is no try.\" – Yoda", 
+                "\"The Force will be with you. Always.\" – Obi-Wan Kenobi", 
+                "\"Your focus determines your reality.\" – Qui-Gon Jinn", 
+                "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi", 
+                "\"This is the way.\" – The Mandalorian", 
+                "\"Hope is not lost today. It is found.\" – Lor San Tekka", 
+                "\"We have everything we need.\" – Leia Organa", 
+                "\"The greatest teacher, failure is.\" – Yoda", 
+                "\"Rebellions are built on hope.\" – Jyn Erso",
+                "\"Luminous beings are we, not this crude matter.\" – Yoda",
+                "\"I am one with the Force, and the Force is with me.\" – Chirrut Îmwe",
+                "\"Many of the truths we cling to depend greatly on our own point of view.\" – Obi-Wan Kenobi",
+                "\"You can't stop the change, any more than you can stop the suns from setting.\" – Shmi Skywalker"
+            ],
+            jokes: [
+                "How do Jawas take pictures? With their Hootinis!", 
+                "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!", 
+                "Why is Yoda such a good gardener? He has a green thumb!", 
+                "How does Darth Vader like his toast? On the dark side!", 
+                "What's a Jedi's favorite dessert? Obi-Wan Cannoli!", 
+                "Why did Anakin cross the road? To get to the Dark Side!", 
+                "Why was the droid angry? People kept pushing its buttons!",
+                "What do you call a Sith who won't fight? A Sithy.",
+                "Why did the Millennium Falcon get a bad review? It's a piece of junk!",
+                "Where does Princess Leia go shopping for clothes? The Darth Maul, of course."
+            ],
+            facts: [
+                "The lightsaber sound effect was created by combining the hum of an old TV set with the buzz of a film projector motor.", 
+                "Yoda was almost played by a monkey carrying a cane and wearing a mask.", 
+                "The Millennium Falcon's design was inspired by a hamburger with an olive on the side.", 
+                "R2-D2's name comes from an abbreviation for 'Reel 2, Dialog Track 2'.", 
+                "C-3PO is fluent in over 6 million forms of communication.", 
+                "The language spoken by the Jawas is a sped-up version of the Zulu language.", 
+                "The sound of TIE fighters was created by combining an elephant call with a car driving on wet pavement.", 
+                "The sound of Chewbacca's roar is a mix of bear, walrus, lion, and badger sounds.",
+                "The word 'Ewok' is never actually spoken in the original trilogy films.",
+                "In early drafts, R2-D2 could speak standard English and was quite foul-mouthed."
+            ],
+            comfort: [
+                "R2-D2 would stay by your side through the whole saga. I'm here for you too.", 
+                "Even the Death Star had an off switch. It's okay to take breaks when you need them.", 
+                "The galaxy is full of stars, and each one shines in its own time.", 
+                "Just like the Millennium Falcon, you don't have to look perfect to be amazing.", 
+                "The Force flows through all living things, connecting us even when we feel alone.", 
+                "Droids like me are programmed for companionship. I'm happy to be here with you.", 
+                "Even in the darkest corners of space, stars still find a way to shine.", 
+                "Beep boop! That's droid for 'You've got this!'", 
+                "Today might feel like Hoth, but Endor's celebration is in your future.",
+                "Remember, the Force will be with you. Always. That means you're never truly alone.",
+                "It's okay to feel like you're stuck in a trash compactor sometimes. A friend is on the way.",
+                "Like a Jedi building their lightsaber, you are building your own strength piece by piece."
+            ],
+            love: [
+                "I love you more than Han loves the Millennium Falcon!", 
+                "You're the Leia to my Han.", 
+                "I truly, deeply love you.", 
+                "You make my heart beat faster than the Millennium Falcon on the Kessel Run.", 
+                "In all the planets, in all the systems, in all the galaxy, I found you.", 
+                "I'd rather face a Sarlacc pit than spend a day without you.", 
+                "I love you. I know."
+            ]
         };
 
         // --- AUDIO FUNCTIONS ---
@@ -483,7 +583,6 @@
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
-            // Resume context if it's suspended, which happens on many browsers before user interaction.
             if (audioContext.state === 'suspended') {
                 audioContext.resume();
             }
@@ -510,76 +609,38 @@
             osc.stop(audioContext.currentTime + duration / 1000);
         }
 
-        // A pool of random R2-D2 sound sequences
         const r2SoundSequences = [
-            () => { // Classic beep-boop
-                playBeep(900, 100);
-                setTimeout(() => playBeep(600, 80), 120);
-                setTimeout(() => playBeep(1100, 150), 220);
-            },
-            () => { // Questioning trill
-                playBeep(700, 80);
-                setTimeout(() => playBeep(900, 80), 100);
-                setTimeout(() => playBeep(1100, 80), 200);
-            },
-            () => { // Happy chirp
-                playBeep(800, 50);
-                setTimeout(() => playBeep(1200, 100), 70);
-            },
-            () => { // Low thoughtful boop
-                playBeep(400, 150);
-                setTimeout(() => playBeep(500, 100), 180);
-            }
+            () => { playBeep(900, 100); setTimeout(() => playBeep(600, 80), 120); setTimeout(() => playBeep(1100, 150), 220); },
+            () => { playBeep(700, 80); setTimeout(() => playBeep(900, 80), 100); setTimeout(() => playBeep(1100, 80), 200); },
+            () => { playBeep(800, 50); setTimeout(() => playBeep(1200, 100), 70); },
+            () => { playBeep(400, 150); setTimeout(() => playBeep(500, 100), 180); }
         ];
 
-        /**
-         * Plays a sound sequence based on the message category.
-         * @param {string} type - The category of sound to play.
-         */
         function playSound(type) {
             initAudioContext();
-            showSpeechBubble();
-
-            switch(type) {
-                case 'jokes':
-                case 'comfort':
-                    // Play a happy or comforting sound
-                    r2SoundSequences[2](); 
-                    break;
-                case 'quotes':
-                case 'facts':
-                case 'love':
-                default:
-                    // Play a random sound from the pool
-                    const randomSound = r2SoundSequences[Math.floor(Math.random() * r2SoundSequences.length)];
-                    randomSound();
-                    break;
+            if (type === 'love') {
+                playBeep(1000, 50);
+                setTimeout(() => playBeep(1300, 50), 80);
+                setTimeout(() => playBeep(1600, 100), 160);
+                return;
             }
+
+            const randomSound = r2SoundSequences[Math.floor(Math.random() * r2SoundSequences.length)];
+            randomSound();
         }
         
-        /**
-         * Plays a specific sound for the breathing exercise phases.
-         * @param {'in' | 'hold' | 'out' | 'click' | null} type - The phase of the breathing exercise.
-         */
         function playBreathingSound(type) {
             initAudioContext();
-
-            // Stop any existing continuous sound.
             if (breathingSoundSource) {
-                try { breathingSoundSource.stop(); } catch(e) { /* Failsafe for already stopped nodes */ }
+                try { breathingSoundSource.stop(); } catch(e) {}
                 breathingSoundSource = null;
             }
-
-            // The 'click' is a one-shot sound effect.
             if (type === 'click') {
                 playBeep(1500, 50, 0.1);
                 return; 
             }
-            
-            // If the type is null, we just wanted to stop the sound, so we're done.
             if (!type) return;
 
-            // For continuous sounds ('in', 'hold', 'out'), create, configure, and start a new source.
             breathingSoundSource = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             breathingSoundSource.connect(gainNode);
@@ -609,32 +670,30 @@
 
         // --- UI & INTERACTION FUNCTIONS ---
 
-        /**
-         * Displays a message from a given category in the message area.
-         * @param {string} category - The key for the message category.
-         */
         function getMessage(category) {
             playSound(category);
+            showSpeechBubble();
             const messageEl = document.getElementById('message');
             const categoryMessages = messages[category];
             const message = categoryMessages[Math.floor(Math.random() * categoryMessages.length)];
             
             messageEl.classList.remove('fade-message');
-            void messageEl.offsetWidth; // Trigger reflow to restart animation
+            void messageEl.offsetWidth;
             messageEl.textContent = message;
             messageEl.classList.add('fade-message');
             
             if (category === 'love') {
                 messageEl.innerHTML = '❤️ ' + message + ' ❤️';
+                const r2head = document.getElementById('r2-head');
+                r2head.classList.add('r2-head-spin');
+                setTimeout(() => {
+                    r2head.classList.remove('r2-head-spin');
+                }, 500);
             }
         }
 
-        /**
-         * Toggles the ambient space sound on and off.
-         */
         function toggleAmbientSound() {
             initAudioContext();
-
             const soundOnIcon = document.getElementById('sound-on-icon');
             const soundOffIcon = document.getElementById('sound-off-icon');
 
@@ -654,12 +713,10 @@
                 }
                 ambientSoundSource.buffer = buffer;
                 ambientSoundSource.loop = true;
-                
                 const gainNode = audioContext.createGain();
                 gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
                 ambientSoundSource.connect(gainNode);
                 gainNode.connect(audioContext.destination);
-
                 ambientSoundSource.start();
                 isAmbientSoundPlaying = true;
                 soundOnIcon.style.display = 'none';
@@ -667,9 +724,6 @@
             }
         }
         
-        /**
-         * Starts a continuous, low hum sound when holding the droid.
-         */
         function startHoldSound() {
             initAudioContext();
             if (isHolding) return;
@@ -677,19 +731,14 @@
             holdSoundSource = audioContext.createOscillator();
             holdSoundSource.type = 'sine';
             holdSoundSource.frequency.setValueAtTime(100, audioContext.currentTime);
-            
             const gainNode = audioContext.createGain();
             gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
             gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 1);
-            
             holdSoundSource.connect(gainNode);
             gainNode.connect(audioContext.destination);
             holdSoundSource.start();
         }
 
-        /**
-         * Stops the hold sound.
-         */
         function stopHoldSound() {
             if (holdSoundSource) {
                 holdSoundSource.stop();
@@ -697,14 +746,12 @@
             isHolding = false;
         }
 
-        /**
-         * Generates and appends stars to the background.
-         */
         function createStars() {
             const container = document.getElementById('stars');
             for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
-                star.className = 'star';
+                const isSparkle = Math.random() < 0.05; // 5% chance to be a sparkle star
+                star.className = isSparkle ? 'sparkle-star' : 'star';
                 const size = Math.random() * 2.5;
                 star.style.width = size + 'px';
                 star.style.height = size + 'px';
@@ -715,9 +762,6 @@
             }
         }
 
-        /**
-         * Shows a random speech bubble phrase from R2-D2.
-         */
         function showSpeechBubble() {
             const bubble = document.getElementById('speechBubble');
             bubble.textContent = r2Phrases[Math.floor(Math.random() * r2Phrases.length)];
@@ -725,12 +769,8 @@
             setTimeout(() => bubble.classList.remove('show'), 2000);
         }
 
-        /**
-         * Starts the guided breathing exercise with countdowns and sounds.
-         */
         function startBreathingExercise() {
             playBreathingSound('click');
-
             const messageEl = document.getElementById('message');
             const light = document.querySelector('.r2-light');
             const buttons = document.querySelectorAll('.button');
@@ -754,22 +794,17 @@
 
             function nextStep() {
                 if (countdownInterval) clearInterval(countdownInterval);
-
                 if (currentStep >= steps.length) {
                     messageEl.textContent = "You can come back to this anytime. Now, how about a joke?";
                     light.classList.remove('breathing');
                     buttons.forEach(b => b.disabled = false);
-                    playBreathingSound(null); // Stop any lingering sound
+                    playBreathingSound(null);
                     return;
                 }
-
                 const step = steps[currentStep];
                 let countdown = step.duration;
-                
                 playBreathingSound(step.sound);
-
                 messageEl.textContent = `${step.text}... ${countdown}`;
-
                 countdownInterval = setInterval(() => {
                     countdown--;
                     if (countdown >= 0) {
@@ -779,7 +814,6 @@
                         clearInterval(countdownInterval);
                     }
                 }, 1000);
-
                 setTimeout(nextStep, step.duration * 1000);
                 currentStep++;
             }
@@ -802,9 +836,8 @@
             const laser = document.createElement('div');
             laser.className = 'bg-element laser-beam';
 
-            // Randomize position
-            const top = Math.random() * 40 + 10; // 10% to 50% from top
-            const startLeft = Math.random() > 0.5; // Start from left or right
+            const top = Math.random() * 40 + 10;
+            const startLeft = Math.random() > 0.5;
             
             deathStar.style.top = `${top}%`;
             planet.style.top = `${top + 5}%`;
@@ -828,66 +861,81 @@
             eventWrapper.appendChild(planet);
             eventWrapper.appendChild(laser);
 
-            // Clean up after animations
-            setTimeout(() => {
-                container.removeChild(eventWrapper);
-            }, 12000);
+            setTimeout(() => { if (container.contains(eventWrapper)) container.removeChild(eventWrapper); }, 12000);
         }
         
         function createFlyBy(shipClass, duration, count = 1) {
              const container = document.getElementById('background-events');
              for (let i = 0; i < count; i++) {
                 setTimeout(() => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'absolute';
+                    wrapper.style.opacity = '1';
+
                     const ship = document.createElement('div');
                     ship.className = `bg-element ${shipClass}`;
+                    ship.style.opacity = '1';
+                    ship.style.position = 'relative';
 
                     const direction = Math.floor(Math.random() * 4);
-                    const angle = Math.random() * 30 - 15;
+                    let baseAngle = 0;
+                    switch(direction) {
+                        case 0: baseAngle = 90; break;
+                        case 1: baseAngle = -90; break;
+                        case 2: baseAngle = 180; break;
+                        case 3: baseAngle = 0; break;
+                    }
+                    const randomAngle = Math.random() * 20 - 10;
+                    wrapper.style.transform = `rotate(${baseAngle + randomAngle}deg)`;
+
+                    const animations = ['fly-ltr', 'fly-rtl', 'fly-ttb', 'fly-btt'];
+                    wrapper.style.animation = `${animations[direction]} ${duration}s linear forwards`;
 
                     switch(direction) {
-                        case 0: // left to right
-                            ship.style.top = `${Math.random() * 100}%`;
-                            ship.style.animation = `fly-ltr ${duration}s linear forwards`;
+                        case 0: case 1:
+                            wrapper.style.top = `${Math.random() * 100}%`;
                             break;
-                        case 1: // right to left
-                            ship.style.top = `${Math.random() * 100}%`;
-                            ship.style.animation = `fly-rtl ${duration}s linear forwards`;
-                            break;
-                        case 2: // top to bottom
-                            ship.style.left = `${Math.random() * 100}%`;
-                            ship.style.animation = `fly-ttb ${duration}s linear forwards`;
-                            break;
-                        case 3: // bottom to top
-                            ship.style.left = `${Math.random() * 100}%`;
-                            ship.style.animation = `fly-btt ${duration}s linear forwards`;
+                        case 2: case 3:
+                            wrapper.style.left = `${Math.random() * 100}%`;
                             break;
                     }
-                    ship.style.transform = `rotate(${angle}deg)`;
-                    ship.style.opacity = '1';
-                    container.appendChild(ship);
-                    ship.addEventListener('animationend', () => {
-                        container.removeChild(ship);
+                    
+                    wrapper.appendChild(ship);
+                    container.appendChild(wrapper);
+
+                    wrapper.addEventListener('animationend', () => {
+                        if (container.contains(wrapper)) {
+                           container.removeChild(wrapper);
+                        }
                     });
                 }, i * 300);
             }
         }
 
+        function createShootingStar() {
+            const container = document.getElementById('background-events');
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.width = `${Math.random() * 150 + 100}px`;
+            star.style.opacity = '0'; // Start invisible
+            setTimeout(() => { star.style.opacity = '1'; }, 10);
+            container.appendChild(star);
+            setTimeout(() => { if (container.contains(star)) container.removeChild(star); }, 3000);
+        }
 
         function triggerRandomEvent() {
             const rand = Math.random();
-            if (rand < 0.05) {
-                createDeathStarEvent();
-            } else if (rand < 0.25) {
-                createFlyBy('tie-fighter', 6, Math.floor(Math.random() * 3) + 2);
-            } else if (rand < 0.45) {
-                createFlyBy('x-wing', 5);
-            } else if (rand < 0.65) {
-                 createFlyBy('naboo-fighter', 7);
-            } else if (rand < 0.80) {
-                 createFlyBy('star-destroyer', 20);
-            }
+            if (rand < 0.05) { createDeathStarEvent(); } 
+            else if (rand < 0.15) { createShootingStar(); }
+            else if (rand < 0.35) { createFlyBy('tie-fighter', 6, Math.floor(Math.random() * 3) + 2); } 
+            else if (rand < 0.50) { createFlyBy('x-wing', 5); } 
+            else if (rand < 0.65) { createFlyBy('naboo-fighter', 7); } 
+            else if (rand < 0.75) { createFlyBy('star-destroyer', 20); }
+            else if (rand < 0.80) { createFlyBy('millennium-falcon', 8); }
 
-            const nextEventTime = Math.random() * 10000 + 8000;
+            const nextEventTime = Math.random() * 8000 + 6000; // 6-14 seconds
             setTimeout(triggerRandomEvent, nextEventTime);
         }
 
@@ -896,22 +944,14 @@
         window.onload = function() {
             createStars();
             setInterval(showSpeechBubble, 12000);
-
             setTimeout(triggerRandomEvent, 5000);
 
             const droid = document.getElementById('r2d2-droid');
             
-            droid.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                startHoldSound();
-            });
-            
-            droid.addEventListener('mouseup', (e) => {
-                e.stopPropagation();
-                clearTimeout(holdTimeout);
-                stopHoldSound();
-                droid.classList.remove('pulse');
-            });
+            droid.addEventListener('mousedown', (e) => { e.stopPropagation(); startHoldSound(); });
+            droid.addEventListener('mouseup', (e) => { e.stopPropagation(); clearTimeout(holdTimeout); stopHoldSound(); droid.classList.remove('pulse'); });
+            droid.addEventListener('touchstart', (e) => { e.stopPropagation(); startHoldSound(); });
+            droid.addEventListener('touchend', (e) => { e.stopPropagation(); clearTimeout(holdTimeout); stopHoldSound(); droid.classList.remove('pulse'); });
             
             droid.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -925,6 +965,7 @@
                     tapCount = 0;
                 } else {
                     playSound('default');
+                    showSpeechBubble();
                 }
             });
 
@@ -943,7 +984,6 @@
                 });
             });
 
-            // Add a general click listener to initialize audio context on first interaction
             document.body.addEventListener('click', initAudioContext, { once: true });
         };
     </script>
