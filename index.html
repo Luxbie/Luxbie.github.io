@@ -483,6 +483,10 @@
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
+            // Resume context if it's suspended, which happens on many browsers before user interaction.
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
         }
 
         /**
@@ -492,7 +496,7 @@
          * @param {number} [volume=0.2] - The volume of the beep.
          */
         function playBeep(freq, duration, volume = 0.2) {
-            if (!audioContext) return;
+            initAudioContext();
             let osc = audioContext.createOscillator();
             let gain = audioContext.createGain();
             osc.connect(gain);
@@ -533,7 +537,7 @@
          * @param {string} type - The category of sound to play.
          */
         function playSound(type) {
-            if (!audioContext || audioContext.state === 'suspended') return;
+            initAudioContext();
             showSpeechBubble();
 
             switch(type) {
@@ -558,7 +562,7 @@
          * @param {'in' | 'hold' | 'out' | 'click' | null} type - The phase of the breathing exercise.
          */
         function playBreathingSound(type) {
-            if (!audioContext) return;
+            initAudioContext();
 
             // Stop any existing continuous sound.
             if (breathingSoundSource) {
@@ -610,8 +614,8 @@
          * @param {string} category - The key for the message category.
          */
         function getMessage(category) {
-            const messageEl = document.getElementById('message');
             playSound(category);
+            const messageEl = document.getElementById('message');
             const categoryMessages = messages[category];
             const message = categoryMessages[Math.floor(Math.random() * categoryMessages.length)];
             
@@ -630,9 +634,6 @@
          */
         function toggleAmbientSound() {
             initAudioContext();
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
 
             const soundOnIcon = document.getElementById('sound-on-icon');
             const soundOffIcon = document.getElementById('sound-off-icon');
@@ -670,7 +671,8 @@
          * Starts a continuous, low hum sound when holding the droid.
          */
         function startHoldSound() {
-            if (!audioContext || isHolding) return;
+            initAudioContext();
+            if (isHolding) return;
             isHolding = true;
             holdSoundSource = audioContext.createOscillator();
             holdSoundSource.type = 'sine';
@@ -727,7 +729,6 @@
          * Starts the guided breathing exercise with countdowns and sounds.
          */
         function startBreathingExercise() {
-            initAudioContext();
             playBreathingSound('click');
 
             const messageEl = document.getElementById('message');
@@ -807,14 +808,13 @@
             
             deathStar.style.top = `${top}%`;
             planet.style.top = `${top + 5}%`;
-            // Corrected laser vertical alignment
             laser.style.top = `calc(${top}% + 28.5px)`; 
 
             if (startLeft) {
                 deathStar.style.left = '10%';
                 planet.style.left = '30%';
-                laser.style.left = 'calc(10% + 60px)'; // Start at the edge of the death star
-                laser.style.width = 'calc(30% - (10% + 60px))'; // Span the distance
+                laser.style.left = 'calc(10% + 60px)';
+                laser.style.width = 'calc(30% - (10% + 60px))';
                 laser.style.transformOrigin = 'left center';
             } else {
                 deathStar.style.right = '10%';
@@ -831,7 +831,7 @@
             // Clean up after animations
             setTimeout(() => {
                 container.removeChild(eventWrapper);
-            }, 12000); // Total duration of event + buffer
+            }, 12000);
         }
         
         function createFlyBy(shipClass, duration, count = 1) {
@@ -841,8 +841,8 @@
                     const ship = document.createElement('div');
                     ship.className = `bg-element ${shipClass}`;
 
-                    const direction = Math.floor(Math.random() * 4); // 0: ltr, 1: rtl, 2: ttb, 3: btt
-                    const angle = Math.random() * 30 - 15; // -15 to +15 degrees
+                    const direction = Math.floor(Math.random() * 4);
+                    const angle = Math.random() * 30 - 15;
 
                     switch(direction) {
                         case 0: // left to right
@@ -863,33 +863,31 @@
                             break;
                     }
                     ship.style.transform = `rotate(${angle}deg)`;
-                    ship.style.opacity = '1'; // Make it visible
+                    ship.style.opacity = '1';
                     container.appendChild(ship);
                     ship.addEventListener('animationend', () => {
                         container.removeChild(ship);
                     });
-                }, i * 300); // Stagger squadron ships
+                }, i * 300);
             }
         }
 
 
         function triggerRandomEvent() {
             const rand = Math.random();
-            // Adjusted probabilities
-            if (rand < 0.05) { // 5% chance for Death Star (rare)
+            if (rand < 0.05) {
                 createDeathStarEvent();
-            } else if (rand < 0.25) { // 20% chance for TIE squadron
-                createFlyBy('tie-fighter', 6, Math.floor(Math.random() * 3) + 2); // 2-4 ships
-            } else if (rand < 0.45) { // 20% chance for X-Wing
+            } else if (rand < 0.25) {
+                createFlyBy('tie-fighter', 6, Math.floor(Math.random() * 3) + 2);
+            } else if (rand < 0.45) {
                 createFlyBy('x-wing', 5);
-            } else if (rand < 0.65) { // 20% chance for Naboo Fighter
+            } else if (rand < 0.65) {
                  createFlyBy('naboo-fighter', 7);
-            } else if (rand < 0.80) { // 15% chance for Star Destroyer
+            } else if (rand < 0.80) {
                  createFlyBy('star-destroyer', 20);
             }
 
-            // Schedule the next event check
-            const nextEventTime = Math.random() * 10000 + 8000; // 8-18 seconds
+            const nextEventTime = Math.random() * 10000 + 8000;
             setTimeout(triggerRandomEvent, nextEventTime);
         }
 
@@ -899,19 +897,13 @@
             createStars();
             setInterval(showSpeechBubble, 12000);
 
-            // Start the random event loop
-            setTimeout(triggerRandomEvent, 5000); // First event after 5s
+            setTimeout(triggerRandomEvent, 5000);
 
             const droid = document.getElementById('r2d2-droid');
             
             droid.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
-                initAudioContext();
-                if (audioContext.state === 'suspended') { audioContext.resume(); }
-                holdTimeout = setTimeout(() => {
-                    droid.classList.add('pulse');
-                    startHoldSound();
-                }, 250);
+                startHoldSound();
             });
             
             droid.addEventListener('mouseup', (e) => {
@@ -932,7 +924,7 @@
                     getMessage('love');
                     tapCount = 0;
                 } else {
-                    playSound('default'); // Play a default random sound on single click
+                    playSound('default');
                 }
             });
 
@@ -950,6 +942,9 @@
                     droidElement.classList.remove('look-left', 'look-right');
                 });
             });
+
+            // Add a general click listener to initialize audio context on first interaction
+            document.body.addEventListener('click', initAudioContext, { once: true });
         };
     </script>
 </body>
