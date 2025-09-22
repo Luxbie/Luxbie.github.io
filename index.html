@@ -28,6 +28,7 @@
 
     <div class="bg-white rounded-3xl shadow-xl max-w-2xl w-full p-8 space-y-8">
         <header class="text-center">
+            <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/perennial-logo.png" alt="Perennial Logo" class="mx-auto h-24 mb-4">
             <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800">The Laskett Garden Audio Tour</h1>
             <p class="mt-2 text-lg text-gray-500">Welcome to the autobiographical garden of Sir Roy Strong and Julia Trevelyan Oman. Press play to listen to each part of your tour.</p>
         </header>
@@ -35,8 +36,7 @@
         <!-- Tour Stop 1 - Introduction -->
         <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <!-- Placeholder for a general view of the garden, using a green from the Perennial brand -->
-                <img src="https://placehold.co/600x400/006400/FFFFFF?text=The+Laskett+Garden+Entrance" alt="Image of The Laskett Garden entrance" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
+                <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/1.jpg" alt="Image of The Laskett Garden entrance" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
                 <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Intro.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
                     <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
@@ -44,6 +44,7 @@
                     <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                     </svg>
+                    <span class="absolute hidden text-xs text-red-500 font-semibold text-center mt-20">Error loading audio.</span>
                 </button>
             </div>
             <div class="mt-4 text-center">
@@ -52,46 +53,25 @@
             </div>
         </div>
 
-        <!-- Tour Stop 2 - The Victoria and Albert Temple -->
+        <!-- Tour Stop 2 - Facing the House -->
         <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <!-- Placeholder for the Victoria and Albert Temple -->
-                <img src="https://placehold.co/600x400/006400/FFFFFF?text=Victoria+and+Albert+Temple" alt="Image of the Victoria and Albert Temple at The Laskett" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
-                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area1.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
+                <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/2.jpg" alt="Image of the view of the house from the garden" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
+                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/FacingtheHouse.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
                     <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
                     </svg>
                     <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
                     </svg>
+                    <span class="absolute hidden text-xs text-red-500 font-semibold text-center mt-20">Error loading audio.</span>
                 </button>
             </div>
             <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">The Victoria and Albert Temple</h2>
-                <p class="mt-2 text-gray-600">This iconic temple was installed to commemorate Sir Roy Strong's retirement. Learn the fascinating story behind this focal point of the garden.</p>
+                <h2 class="text-xl font-medium text-gray-700">Facing the House</h2>
+                <p class="mt-2 text-gray-600">This section guides you through the beautiful views and elements on the side of the house, offering a new perspective on the garden's design and features.</p>
             </div>
         </div>
-
-        <!-- Tour Stop 3 - The Rose Garden -->
-        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
-            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <!-- Placeholder for a section of the rose garden -->
-                <img src="https://placehold.co/600x400/006400/FFFFFF?text=The+Rose+Garden" alt="Image of The Rose Garden at The Laskett" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
-                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area2.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
-                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">The Rose Garden</h2>
-                <p class="mt-2 text-gray-600">A vibrant and theatrical space, the rose garden is a key feature of The Laskett. This section explains the care and history of this beautiful space, which is designed to be in bloom throughout the year.</p>
-            </div>
-        </div>
-
     </div>
 
     <script>
@@ -119,11 +99,15 @@
 
             // Add the click event listener to each button
             playButtons.forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', async () => {
                     const audioSrc = button.dataset.audioSrc;
                     const audio = audios[audioSrc];
                     const playIcon = button.querySelector('.play-icon');
                     const pauseIcon = button.querySelector('.pause-icon');
+                    const errorSpan = button.querySelector('span');
+
+                    // Hide any previous error messages
+                    errorSpan.classList.add('hidden');
 
                     if (audio.paused) {
                         // Pause all other audios before playing this one
@@ -139,10 +123,18 @@
                             }
                         });
 
-                        // Play the clicked audio
-                        audio.play();
-                        playIcon.classList.add('hidden');
-                        pauseIcon.classList.remove('hidden');
+                        try {
+                            // Play the clicked audio
+                            await audio.play();
+                            playIcon.classList.add('hidden');
+                            pauseIcon.classList.remove('hidden');
+                        } catch (error) {
+                            console.error("Error playing audio:", error);
+                            errorSpan.textContent = "Error playing audio.";
+                            errorSpan.classList.remove('hidden');
+                            playIcon.classList.remove('hidden');
+                            pauseIcon.classList.add('hidden');
+                        }
                     } else {
                         // Pause the current audio
                         audio.pause();
