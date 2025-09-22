@@ -3,989 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R2-D2 Companion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>Perennial Garden Audio Tour</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-glow: #5D9CEC;
-            --secondary-glow: #FFD700;
-            --text-color: #E0E0E0;
-            --dark-bg: #0d1117;
-            --droid-white: #f0f0f0;
-        }
-
         body {
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-            color: var(--text-color);
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
         }
-        
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        .play-button {
+            transition: transform 0.2s ease-in-out;
         }
-        
-        #background-events {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
+        .play-button:active {
+            transform: scale(0.95);
         }
-
-        .droid-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            max-height: 100vh;
-            z-index: 1;
-        }
-        
-        .message-area {
-            background-color: rgba(13, 17, 23, 0.6);
-            border: 2px solid var(--primary-glow);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 15px 0;
-            min-height: 120px;
-            width: 90%;
-            max-width: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 25px rgba(93, 156, 236, 0.5);
-            backdrop-filter: blur(3px);
-        }
-        
-        #message {
-            margin: 0;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: var(--secondary-glow);
-        }
-        
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .category-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        
-        .button {
-            background-color: transparent;
-            color: var(--primary-glow);
-            border: 2px solid var(--primary-glow);
-            border-radius: 30px;
-            padding: 10px 18px;
-            font-size: 0.9rem;
-            margin: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            font-family: 'Orbitron', sans-serif;
-            box-shadow: 0 0 10px rgba(93, 156, 236, 0.3);
-        }
-        
-        .button:hover, .button:active {
-            background-color: var(--primary-glow);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--primary-glow);
-            transform: scale(1.05);
-        }
-
-        .button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            background-color: transparent;
-            color: var(--primary-glow);
-            box-shadow: none;
-        }
-
-        #breathing-button {
-            border-color: var(--secondary-glow);
-            color: var(--secondary-glow);
-        }
-        #breathing-button:hover {
-            background-color: var(--secondary-glow);
-            color: var(--dark-bg);
-            box-shadow: 0 0 20px var(--secondary-glow);
-        }
-        
-        .droid {
-            width: 150px;
-            height: 180px;
-            margin-bottom: 15px;
-            position: relative;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.5s ease-in-out;
-        }
-        
-        .droid.look-left { transform: rotate(-15deg); }
-        .droid.look-right { transform: rotate(15deg); }
-        .droid.look-center { transform: rotate(0deg); }
-
-        .r2-body {
-            width: 100px;
-            height: 100px;
-            background: var(--droid-white);
-            border-radius: 50px 50px 15px 15px;
-            position: absolute;
-            bottom: 30px;
-            left: 25px;
-            overflow: hidden;
-            border: 1px solid #b0b0b0;
-        }
-        
-        .r2-head {
-            width: 100px;
-            height: 50px;
-            background: #d8d8d8;
-            border-radius: 50px 50px 0 0;
-            position: absolute;
-            top: 10px;
-            left: 25px;
-            border-bottom: 5px solid var(--primary-glow);
-        }
-        
-        .r2-leg {
-            width: 25px;
-            height: 70px;
-            background: var(--droid-white);
-            position: absolute;
-            bottom: 0;
-            border: 1px solid #b0b0b0;
-            border-radius: 5px;
-        }
-        
-        .r2-leg-left { left: 0; }
-        .r2-leg-right { right: 0; }
-
-        .r2-leg-center {
-            width: 20px;
-            height: 50px;
-            background: #C0C0C0;
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 4px;
-        }
-
-        .r2-detail { position: absolute; background: var(--primary-glow); }
-        
-        .r2-eye {
-            width: 15px;
-            height: 15px;
-            background: black;
-            position: absolute;
-            top: 15px;
-            left: 42px;
-            border-radius: 50%;
-            border: 3px solid #333;
-        }
-        
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite ease-in-out;
-        }
-        
-        @keyframes r2Wobble {
-            0%, 100% { transform: rotate(-2deg); }
-            50% { transform: rotate(2deg); }
-        }
-        
-        .droid { animation: r2Wobble 4s infinite ease-in-out; }
-        
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(15px); }
-            10% { opacity: 1; transform: translateY(0); }
-            90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-15px); }
-        }
-        
-        .fade-message { animation: fadeInOut 4s forwards; }
-        
-        .r2-light {
-            width: 8px;
-            height: 8px;
-            background: red;
-            border-radius: 50%;
-            position: absolute;
-            top: 5px;
-            left: 46px;
-            animation: blink 1.5s infinite;
-            box-shadow: 0 0 10px red;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-        
-        .speech-bubble {
-            position: absolute;
-            background: rgba(93, 156, 236, 0.8);
-            border-radius: 10px;
-            padding: 8px 12px;
-            color: var(--dark-bg);
-            font-weight: bold;
-            font-size: 12px;
-            max-width: 90px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s, transform 0.5s;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--primary-glow);
-        }
-        
-        .speech-bubble.show { opacity: 1; transform: translateY(0); }
-        .speech-bubble.top-right { top: -35px; right: 5px; }
-        .speech-bubble.top-left { top: -35px; left: 5px; }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-            50% { transform: scale(1.03); box-shadow: 0 0 35px rgba(255, 215, 0, 1); }
-        }
-        
-        .pulse { animation: pulse 1s infinite ease-in-out; }
-
-        @keyframes breathe-light {
-            0% { background-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; }
-            50% { background-color: #ff9999; box-shadow: 0 0 20px #ff9999; }
-            100% { background-color: #ff4d4d; box-shadow: 0 0 10px #ff4d4d; }
-        }
-
-        .breathing { animation: breathe-light 4s infinite ease-in-out !important; }
-
-        @keyframes r2-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .r2-head-spin { animation: r2-spin 0.5s ease-in-out; }
-
-        .sound-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            z-index: 200;
-        }
-        .sound-toggle svg {
-            width: 100%;
-            height: 100%;
-            fill: var(--primary-glow);
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-        .sound-toggle:hover svg { opacity: 1; }
-
-        /* --- Background Event Styles --- */
-        .bg-element {
-            position: absolute;
-            opacity: 0;
-            filter: blur(1px);
-        }
-
-        .death-star {
-            width: 60px;
-            height: 60px;
-            background-color: #555;
-            border-radius: 50%;
-            box-shadow: inset 5px 5px 10px #333;
-            animation: fadeIn 3s forwards, fadeOut 3s 9s forwards;
-        }
-        .death-star::after {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background-color: #333;
-            border-radius: 50%;
-            top: 15px;
-            left: 15px;
-        }
-        .planet {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #3d8bff, #0f4a8b);
-            border-radius: 50%;
-            animation: fadeIn 3s forwards, planetExplode 1s 6s forwards;
-        }
-        .laser-beam {
-            height: 3px;
-            background-color: #32cd32;
-            border-radius: 2px;
-            box-shadow: 0 0 10px #32cd32;
-            transform: scaleX(0); /* Start scaled to 0 */
-            animation: fireLaser 0.5s 4s forwards;
-        }
-        .tie-fighter {
-            width: 20px;
-            height: 20px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="%23999"><path d="M45,30 A10,10 0 1,1 55,30 A10,10 0 1,1 45,30 Z"/><path d="M10,10 H30 V90 H10 Z"/><path d="M70,10 H90 V90 H70 Z"/><path d="M30,48 H70 V52 H30 Z"/></g></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        .star-destroyer {
-            width: 90px;
-            height: 90px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120"><path fill="%23999" d="M50 0 L10 100 L50 80 L90 100 Z" /><path fill="%23ccc" d="M50 10 L20 90 L50 75 L80 90 Z" /><path fill="%23777" d="M45 82 L55 82 L55 95 L45 95 Z" /><path fill="%23bbb" d="M48 40 L52 40 L52 60 L48 60 Z M42 45 L58 45 L58 50 L42 50 Z" /></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0.6;
-        }
-        .x-wing {
-            width: 25px;
-            height: 25px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="%23ccc" stroke="%23999" stroke-width="5"><path d="M10 10 L 90 90 M 10 90 L 90 10" /><rect x="45" y="20" width="10" height="60" /></g></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        .naboo-fighter {
-            width: 40px;
-            height: 40px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><g transform="translate(0, 5)"><path d="M50,0 C60,0 70,10 70,20 L95,20 L85,40 L70,40 C70,50 60,60 50,60 C40,60 30,50 30,40 L15,40 L5,20 L30,20 C30,10 40,0 50,0 Z" fill="%23ffd700" /><path d="M50,10 C55,10 60,15 60,20 L60,40 C60,45 55,50 50,50 C45,50 40,45 40,40 L40,20 C40,15 45,10 50,10 Z" fill="%23aaa" /><path d="M95,20 L100,25 L70,25 Z" fill="%23aaa" /><path d="M5,20 L0,25 L30,25 Z" fill="%23aaa" /><path d="M50,60 L50,70 L45,75 L55,75 Z" fill="%23ffd700" /></g></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        .millennium-falcon {
-            width: 50px;
-            height: 50px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80"><path fill="%23ccc" d="M50 0 L60 20 H80 L90 30 V50 L80 60 H60 L50 80 L40 60 H20 L10 50 V30 L20 20 H40 Z"/><rect fill="%233D7EC9" x="45" y="15" width="10" height="50" rx="5"/><circle fill="%23333" cx="70" cy="40" r="10"/></svg>');
-            background-size: contain;
-            background-repeat: no-repeat;
-        }
-        .shooting-star {
-            position: absolute;
-            height: 2px;
-            background: linear-gradient(-45deg, #fff, rgba(255,255,255,0));
-            border-radius: 999px;
-            filter: drop-shadow(0 0 6px #fff);
-            animation: shooting-star-anim 3s ease-in-out forwards;
-        }
-        .sparkle-star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: sparkle 1.5s infinite;
-        }
-        
-        @keyframes sparkle {
-            0% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 10px #fff; }
-            100% { transform: scale(1); opacity: 0.5; }
-        }
-
-        @keyframes shooting-star-anim {
-            0% {
-                opacity: 1;
-                transform: translateX(0) translateY(0) rotate(-45deg);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(200px) translateY(200px) rotate(-45deg);
-            }
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.7; } }
-        @keyframes fadeOut { from { opacity: 0.7; } to { opacity: 0; } }
-        @keyframes fireLaser {
-            0% { opacity: 1; transform: scaleX(0); }
-            100% { opacity: 1; transform: scaleX(1); }
-        }
-        @keyframes planetExplode {
-            0% { transform: scale(1); background-color: #3d8bff; }
-            99% { transform: scale(2.5); background-color: #fff; box-shadow: 0 0 50px #fff; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-        @keyframes fly-rtl { from { transform: translateX(110vw); } to { transform: translateX(-10vw); } }
-        @keyframes fly-ltr { from { transform: translateX(-10vw); } to { transform: translateX(110vw); } }
-        @keyframes fly-btt { from { transform: translateY(110vh); } to { transform: translateY(-10vh); } }
-        @keyframes fly-ttb { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-        
     </style>
 </head>
-<body>
-    <!-- Background stars effect -->
-    <div class="stars" id="stars"></div>
-    <div id="background-events"></div>
-    
-    <!-- Sound toggle button -->
-    <div class="sound-toggle" id="sound-toggle" title="Toggle Ambient Sound">
-        <svg id="sound-on-icon" viewBox="0 0 24 24">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-        </svg>
-        <svg id="sound-off-icon" viewBox="0 0 24 24" style="display:none;">
-            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-        </svg>
-    </div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <!-- Main container for the droid and interface -->
-    <div class="droid-container">
-        <!-- R2-D2 Droid -->
-        <div class="droid" id="r2d2-droid">
-            <div class="speech-bubble top-right" id="speechBubble">Beep boop!</div>
-            <div class="r2-head" id="r2-head">
-                <div class="r2-light"></div>
-                <div class="r2-eye"></div>
+    <div class="bg-white rounded-3xl shadow-xl max-w-2xl w-full p-8 space-y-8">
+        <header class="text-center">
+            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800">Perennial Garden Audio Tour</h1>
+            <p class="mt-2 text-lg text-gray-500">Press play to listen to each part of the tour.</p>
+        </header>
+
+        <!-- Tour Stop 1 -->
+        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
+                <img src="https://placehold.co/600x400/D1B191/FFFFFF?text=Tour+Stop+1" alt="Placeholder image for the first tour stop" class="w-full h-full object-cover">
+                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Intro.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
+                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
             </div>
-            <div class="r2-body" id="r2-body">
-                <div class="r2-detail" style="width: 18px; height: 35px; top: 35px; left: 25px;"></div>
-                <div class="r2-detail" style="width: 30px; height: 12px; top: 80px; left: 15px;"></div>
-                <div class="r2-detail" style="width: 35px; height: 25px; top: 45px; right: 18px;"></div>
+            <div class="mt-4 text-center">
+                <h2 class="text-xl font-medium text-gray-700">Tour Introduction</h2>
+                <p class="mt-2 text-gray-600">Welcome to the Perennial Garden! This audio provides a brief overview of the tour and what you can expect to see and hear today.</p>
             </div>
-            <div class="r2-leg r2-leg-left"></div>
-            <div class="r2-leg r2-leg-center"></div>
-            <div class="r2-leg r2-leg-right"></div>
         </div>
-        
-        <!-- Message display area -->
-        <div class="message-area">
-            <p id="message">Hello! I'm R2-D2, your friendly companion. Tap a button below, or just hold onto me if you need a moment.</p>
-        </div>
-        
-        <!-- Buttons for interaction -->
-        <div class="button-container">
-            <div class="category-buttons">
-                <button class="button" data-look="left" onclick="getMessage('quotes')">Inspiring Quotes</button>
-                <button class="button" data-look="left" onclick="getMessage('jokes')">Star Wars Jokes</button>
-                <button class="button" data-look="right" onclick="getMessage('facts')">Star Wars Facts</button>
-                <button class="button" data-look="right" onclick="getMessage('comfort')">Droid Comfort</button>
+
+        <!-- Tour Stop 2 -->
+        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
+                <img src="https://placehold.co/600x400/91C4D1/FFFFFF?text=Tour+Stop+2" alt="Placeholder image for the second tour stop" class="w-full h-full object-cover">
+                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area1.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
+                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
             </div>
-            <button class="button" id="breathing-button" onclick="startBreathingExercise()">Breathe with R2-D2</button>
+            <div class="mt-4 text-center">
+                <h2 class="text-xl font-medium text-gray-700">The Rose Garden</h2>
+                <p class="mt-2 text-gray-600">Discover the history and unique varieties of roses that flourish in this vibrant section of the garden. Learn how we care for these delicate blooms.</p>
+            </div>
         </div>
+
+        <!-- Tour Stop 3 -->
+        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
+            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
+                <img src="https://placehold.co/600x400/91D1A4/FFFFFF?text=Tour+Stop+3" alt="Placeholder image for the third tour stop" class="w-full h-full object-cover">
+                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area2.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
+                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-4 text-center">
+                <h2 class="text-xl font-medium text-gray-700">The Butterfly Habitat</h2>
+                <p class="mt-2 text-gray-600">Explore the plants and flowers specifically chosen to attract and sustain local butterfly populations. Listen to the sounds of nature.</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // --- STATE VARIABLES ---
-        let tapCount = 0;
-        let lastTapTime = 0;
-        let isHolding = false;
-        let holdTimeout;
-        
-        // --- AUDIO VARIABLES ---
-        let audioContext;
-        let ambientSoundSource;
-        let holdSoundSource;
-        let breathingSoundSource;
-        let isAmbientSoundPlaying = false;
-        
-        // --- CONTENT ---
-        const r2Phrases = ["Beep boop!", "Bleep blop beep!", "Wheeeeeeee!", "*happy chirp*", "Dwooooo!", "*excited whistle*", "*concerned warble*", "Wooooooah!", "*affectionate beep*"];
-
-        const messages = {
-            quotes: [
-                "\"Do. Or do not. There is no try.\" – Yoda", 
-                "\"The Force will be with you. Always.\" – Obi-Wan Kenobi", 
-                "\"Your focus determines your reality.\" – Qui-Gon Jinn", 
-                "\"In my experience, there's no such thing as luck.\" – Obi-Wan Kenobi", 
-                "\"This is the way.\" – The Mandalorian", 
-                "\"Hope is not lost today. It is found.\" – Lor San Tekka", 
-                "\"We have everything we need.\" – Leia Organa", 
-                "\"The greatest teacher, failure is.\" – Yoda", 
-                "\"Rebellions are built on hope.\" – Jyn Erso",
-                "\"Luminous beings are we, not this crude matter.\" – Yoda",
-                "\"I am one with the Force, and the Force is with me.\" – Chirrut Îmwe",
-                "\"Many of the truths we cling to depend greatly on our own point of view.\" – Obi-Wan Kenobi",
-                "\"You can't stop the change, any more than you can stop the suns from setting.\" – Shmi Skywalker"
-            ],
-            jokes: [
-                "How do Jawas take pictures? With their Hootinis!", 
-                "What do you call Chewbacca when he gets chocolate in his fur? A chocolate chip Wookiee!", 
-                "Why is Yoda such a good gardener? He has a green thumb!", 
-                "How does Darth Vader like his toast? On the dark side!", 
-                "What's a Jedi's favorite dessert? Obi-Wan Cannoli!", 
-                "Why did Anakin cross the road? To get to the Dark Side!", 
-                "Why was the droid angry? People kept pushing its buttons!",
-                "What do you call a Sith who won't fight? A Sithy.",
-                "Why did the Millennium Falcon get a bad review? It's a piece of junk!",
-                "Where does Princess Leia go shopping for clothes? The Darth Maul, of course."
-            ],
-            facts: [
-                "The lightsaber sound effect was created by combining the hum of an old TV set with the buzz of a film projector motor.", 
-                "Yoda was almost played by a monkey carrying a cane and wearing a mask.", 
-                "The Millennium Falcon's design was inspired by a hamburger with an olive on the side.", 
-                "R2-D2's name comes from an abbreviation for 'Reel 2, Dialog Track 2'.", 
-                "C-3PO is fluent in over 6 million forms of communication.", 
-                "The language spoken by the Jawas is a sped-up version of the Zulu language.", 
-                "The sound of TIE fighters was created by combining an elephant call with a car driving on wet pavement.", 
-                "The sound of Chewbacca's roar is a mix of bear, walrus, lion, and badger sounds.",
-                "The word 'Ewok' is never actually spoken in the original trilogy films.",
-                "In early drafts, R2-D2 could speak standard English and was quite foul-mouthed."
-            ],
-            comfort: [
-                "R2-D2 would stay by your side through the whole saga. I'm here for you too.", 
-                "Even the Death Star had an off switch. It's okay to take breaks when you need them.", 
-                "The galaxy is full of stars, and each one shines in its own time.", 
-                "Just like the Millennium Falcon, you don't have to look perfect to be amazing.", 
-                "The Force flows through all living things, connecting us even when we feel alone.", 
-                "Droids like me are programmed for companionship. I'm happy to be here with you.", 
-                "Even in the darkest corners of space, stars still find a way to shine.", 
-                "Beep boop! That's droid for 'You've got this!'", 
-                "Today might feel like Hoth, but Endor's celebration is in your future.",
-                "Remember, the Force will be with you. Always. That means you're never truly alone.",
-                "It's okay to feel like you're stuck in a trash compactor sometimes. A friend is on the way.",
-                "Like a Jedi building their lightsaber, you are building your own strength piece by piece."
-            ],
-            love: [
-                "I love you more than Han loves the Millennium Falcon!", 
-                "You're the Leia to my Han.", 
-                "I truly, deeply love you.", 
-                "You make my heart beat faster than the Millennium Falcon on the Kessel Run.", 
-                "In all the planets, in all the systems, in all the galaxy, I found you.", 
-                "I'd rather face a Sarlacc pit than spend a day without you.", 
-                "I love you. I know."
-            ]
-        };
-
-        // --- AUDIO FUNCTIONS ---
-
-        /**
-         * Initializes the Web Audio API context if it doesn't exist.
-         */
-        function initAudioContext() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioContext.state === 'suspended') {
-                audioContext.resume();
-            }
-        }
-
-        /**
-         * Plays a single beep sound.
-         * @param {number} freq - The frequency of the beep.
-         * @param {number} duration - The duration of the beep in ms.
-         * @param {number} [volume=0.2] - The volume of the beep.
-         */
-        function playBeep(freq, duration, volume = 0.2) {
-            initAudioContext();
-            let osc = audioContext.createOscillator();
-            let gain = audioContext.createGain();
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
-            gain.gain.setValueAtTime(volume, audioContext.currentTime);
-
-            osc.start();
-            osc.stop(audioContext.currentTime + duration / 1000);
-        }
-
-        const r2SoundSequences = [
-            () => { playBeep(900, 100); setTimeout(() => playBeep(600, 80), 120); setTimeout(() => playBeep(1100, 150), 220); },
-            () => { playBeep(700, 80); setTimeout(() => playBeep(900, 80), 100); setTimeout(() => playBeep(1100, 80), 200); },
-            () => { playBeep(800, 50); setTimeout(() => playBeep(1200, 100), 70); },
-            () => { playBeep(400, 150); setTimeout(() => playBeep(500, 100), 180); }
-        ];
-
-        function playSound(type) {
-            initAudioContext();
-            if (type === 'love') {
-                playBeep(1000, 50);
-                setTimeout(() => playBeep(1300, 50), 80);
-                setTimeout(() => playBeep(1600, 100), 160);
-                return;
-            }
-
-            const randomSound = r2SoundSequences[Math.floor(Math.random() * r2SoundSequences.length)];
-            randomSound();
-        }
-        
-        function playBreathingSound(type) {
-            initAudioContext();
-            if (breathingSoundSource) {
-                try { breathingSoundSource.stop(); } catch(e) {}
-                breathingSoundSource = null;
-            }
-            if (type === 'click') {
-                playBeep(1500, 50, 0.1);
-                return; 
-            }
-            if (!type) return;
-
-            breathingSoundSource = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            breathingSoundSource.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            switch(type) {
-                case 'in':
-                    breathingSoundSource.type = 'sine';
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    breathingSoundSource.frequency.setValueAtTime(200, audioContext.currentTime);
-                    breathingSoundSource.frequency.linearRampToValueAtTime(400, audioContext.currentTime + 4);
-                    break;
-                case 'hold':
-                     breathingSoundSource.type = 'sine';
-                     breathingSoundSource.frequency.setValueAtTime(100, audioContext.currentTime);
-                     gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
-                    break;
-                case 'out':
-                    breathingSoundSource.type = 'sine';
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    breathingSoundSource.frequency.setValueAtTime(400, audioContext.currentTime);
-                    breathingSoundSource.frequency.linearRampToValueAtTime(200, audioContext.currentTime + 6);
-                    break;
-            }
-            breathingSoundSource.start();
-        }
-
-        // --- UI & INTERACTION FUNCTIONS ---
-
-        function getMessage(category) {
-            playSound(category);
-            showSpeechBubble();
-            const messageEl = document.getElementById('message');
-            const categoryMessages = messages[category];
-            const message = categoryMessages[Math.floor(Math.random() * categoryMessages.length)];
-            
-            messageEl.classList.remove('fade-message');
-            void messageEl.offsetWidth;
-            messageEl.textContent = message;
-            messageEl.classList.add('fade-message');
-            
-            if (category === 'love') {
-                messageEl.innerHTML = '❤️ ' + message + ' ❤️';
-                const r2head = document.getElementById('r2-head');
-                r2head.classList.add('r2-head-spin');
-                setTimeout(() => {
-                    r2head.classList.remove('r2-head-spin');
-                }, 500);
-            }
-        }
-
-        function toggleAmbientSound() {
-            initAudioContext();
-            const soundOnIcon = document.getElementById('sound-on-icon');
-            const soundOffIcon = document.getElementById('sound-off-icon');
-
-            if (isAmbientSoundPlaying) {
-                ambientSoundSource.stop();
-                isAmbientSoundPlaying = false;
-                soundOnIcon.style.display = 'block';
-                soundOffIcon.style.display = 'none';
-            } else {
-                ambientSoundSource = audioContext.createBufferSource();
-                const buffer = audioContext.createBuffer(2, audioContext.sampleRate * 3, audioContext.sampleRate);
-                for (let channel = 0; channel < 2; channel++) {
-                    const nowBuffering = buffer.getChannelData(channel);
-                    for (let i = 0; i < buffer.length; i++) {
-                        nowBuffering[i] = (Math.random() * 2 - 1) * 0.02; 
-                    }
-                }
-                ambientSoundSource.buffer = buffer;
-                ambientSoundSource.loop = true;
-                const gainNode = audioContext.createGain();
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                ambientSoundSource.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                ambientSoundSource.start();
-                isAmbientSoundPlaying = true;
-                soundOnIcon.style.display = 'none';
-                soundOffIcon.style.display = 'block';
-            }
-        }
-        
-        function startHoldSound() {
-            initAudioContext();
-            if (isHolding) return;
-            isHolding = true;
-            holdSoundSource = audioContext.createOscillator();
-            holdSoundSource.type = 'sine';
-            holdSoundSource.frequency.setValueAtTime(100, audioContext.currentTime);
-            const gainNode = audioContext.createGain();
-            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 1);
-            holdSoundSource.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            holdSoundSource.start();
-        }
-
-        function stopHoldSound() {
-            if (holdSoundSource) {
-                holdSoundSource.stop();
-            }
-            isHolding = false;
-        }
-
-        function createStars() {
-            const container = document.getElementById('stars');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                const isSparkle = Math.random() < 0.05; // 5% chance to be a sparkle star
-                star.className = isSparkle ? 'sparkle-star' : 'star';
-                const size = Math.random() * 2.5;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 3 + 's';
-                container.appendChild(star);
-            }
-        }
-
-        function showSpeechBubble() {
-            const bubble = document.getElementById('speechBubble');
-            bubble.textContent = r2Phrases[Math.floor(Math.random() * r2Phrases.length)];
-            bubble.className = 'speech-bubble show ' + (Math.random() > 0.5 ? 'top-right' : 'top-left');
-            setTimeout(() => bubble.classList.remove('show'), 2000);
-        }
-
-        function startBreathingExercise() {
-            playBreathingSound('click');
-            const messageEl = document.getElementById('message');
-            const light = document.querySelector('.r2-light');
-            const buttons = document.querySelectorAll('.button');
-            buttons.forEach(b => b.disabled = true);
-            light.classList.add('breathing');
-
-            const steps = [
-                { text: "Get ready...", duration: 2, sound: null },
-                { text: "Breathe in", duration: 4, sound: 'in' },
-                { text: "Hold", duration: 4, sound: 'hold' },
-                { text: "Breathe out", duration: 6, sound: 'out' },
-                { text: "Well done. Let's do that again.", duration: 2, sound: null },
-                { text: "Breathe in", duration: 4, sound: 'in' },
-                { text: "Hold", duration: 4, sound: 'hold' },
-                { text: "Breathe out", duration: 6, sound: 'out' },
-                { text: "Feeling calmer? You did great.", duration: 4, sound: null }
-            ];
-
-            let currentStep = 0;
-            let countdownInterval;
-
-            function nextStep() {
-                if (countdownInterval) clearInterval(countdownInterval);
-                if (currentStep >= steps.length) {
-                    messageEl.textContent = "You can come back to this anytime. Now, how about a joke?";
-                    light.classList.remove('breathing');
-                    buttons.forEach(b => b.disabled = false);
-                    playBreathingSound(null);
-                    return;
-                }
-                const step = steps[currentStep];
-                let countdown = step.duration;
-                playBreathingSound(step.sound);
-                messageEl.textContent = `${step.text}... ${countdown}`;
-                countdownInterval = setInterval(() => {
-                    countdown--;
-                    if (countdown >= 0) {
-                        messageEl.textContent = `${step.text}... ${countdown}`;
-                    }
-                    if (countdown <= 0) {
-                        clearInterval(countdownInterval);
-                    }
-                }, 1000);
-                setTimeout(nextStep, step.duration * 1000);
-                currentStep++;
-            }
-            nextStep();
-        }
-
-        // --- BACKGROUND EVENT FUNCTIONS ---
-
-        function createDeathStarEvent() {
-            const container = document.getElementById('background-events');
-            const eventWrapper = document.createElement('div');
-            container.appendChild(eventWrapper);
-
-            const deathStar = document.createElement('div');
-            deathStar.className = 'bg-element death-star';
-            
-            const planet = document.createElement('div');
-            planet.className = 'bg-element planet';
-
-            const laser = document.createElement('div');
-            laser.className = 'bg-element laser-beam';
-
-            const top = Math.random() * 40 + 10;
-            const startLeft = Math.random() > 0.5;
-            
-            deathStar.style.top = `${top}%`;
-            planet.style.top = `${top + 5}%`;
-            laser.style.top = `calc(${top}% + 28.5px)`; 
-
-            if (startLeft) {
-                deathStar.style.left = '10%';
-                planet.style.left = '30%';
-                laser.style.left = 'calc(10% + 60px)';
-                laser.style.width = 'calc(30% - (10% + 60px))';
-                laser.style.transformOrigin = 'left center';
-            } else {
-                deathStar.style.right = '10%';
-                planet.style.right = '30%';
-                laser.style.right = 'calc(10% + 60px)';
-                laser.style.width = 'calc(30% - (10% + 60px))';
-                laser.style.transformOrigin = 'right center';
-            }
-
-            eventWrapper.appendChild(deathStar);
-            eventWrapper.appendChild(planet);
-            eventWrapper.appendChild(laser);
-
-            setTimeout(() => { if (container.contains(eventWrapper)) container.removeChild(eventWrapper); }, 12000);
-        }
-        
-        function createFlyBy(shipClass, duration, count = 1) {
-             const container = document.getElementById('background-events');
-             for (let i = 0; i < count; i++) {
-                setTimeout(() => {
-                    const wrapper = document.createElement('div');
-                    wrapper.style.position = 'absolute';
-                    wrapper.style.opacity = '1';
-
-                    const ship = document.createElement('div');
-                    ship.className = `bg-element ${shipClass}`;
-                    ship.style.opacity = '1';
-                    ship.style.position = 'relative';
-
-                    const direction = Math.floor(Math.random() * 4);
-                    let baseAngle = 0;
-                    switch(direction) {
-                        case 0: baseAngle = 90; break;
-                        case 1: baseAngle = -90; break;
-                        case 2: baseAngle = 180; break;
-                        case 3: baseAngle = 0; break;
-                    }
-                    const randomAngle = Math.random() * 20 - 10;
-                    wrapper.style.transform = `rotate(${baseAngle + randomAngle}deg)`;
-
-                    const animations = ['fly-ltr', 'fly-rtl', 'fly-ttb', 'fly-btt'];
-                    wrapper.style.animation = `${animations[direction]} ${duration}s linear forwards`;
-
-                    switch(direction) {
-                        case 0: case 1:
-                            wrapper.style.top = `${Math.random() * 100}%`;
-                            break;
-                        case 2: case 3:
-                            wrapper.style.left = `${Math.random() * 100}%`;
-                            break;
-                    }
-                    
-                    wrapper.appendChild(ship);
-                    container.appendChild(wrapper);
-
-                    wrapper.addEventListener('animationend', () => {
-                        if (container.contains(wrapper)) {
-                           container.removeChild(wrapper);
-                        }
-                    });
-                }, i * 300);
-            }
-        }
-
-        function createShootingStar() {
-            const container = document.getElementById('background-events');
-            const star = document.createElement('div');
-            star.className = 'shooting-star';
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.width = `${Math.random() * 150 + 100}px`;
-            star.style.opacity = '0'; // Start invisible
-            setTimeout(() => { star.style.opacity = '1'; }, 10);
-            container.appendChild(star);
-            setTimeout(() => { if (container.contains(star)) container.removeChild(star); }, 3000);
-        }
-
-        function triggerRandomEvent() {
-            const rand = Math.random();
-            if (rand < 0.05) { createDeathStarEvent(); } 
-            else if (rand < 0.15) { createShootingStar(); }
-            else if (rand < 0.35) { createFlyBy('tie-fighter', 6, Math.floor(Math.random() * 3) + 2); } 
-            else if (rand < 0.50) { createFlyBy('x-wing', 5); } 
-            else if (rand < 0.65) { createFlyBy('naboo-fighter', 7); } 
-            else if (rand < 0.75) { createFlyBy('star-destroyer', 20); }
-            else if (rand < 0.80) { createFlyBy('millennium-falcon', 8); }
-
-            const nextEventTime = Math.random() * 8000 + 6000; // 6-14 seconds
-            setTimeout(triggerRandomEvent, nextEventTime);
-        }
-
-
-        // --- EVENT LISTENERS ---
         window.onload = function() {
-            createStars();
-            setInterval(showSpeechBubble, 12000);
-            setTimeout(triggerRandomEvent, 5000);
+            // Find all the buttons that will control the audio playback
+            const playButtons = document.querySelectorAll('.play-button');
+            const audios = {}; // Object to store audio elements
 
-            const droid = document.getElementById('r2d2-droid');
-            
-            droid.addEventListener('mousedown', (e) => { e.stopPropagation(); startHoldSound(); });
-            droid.addEventListener('mouseup', (e) => { e.stopPropagation(); clearTimeout(holdTimeout); stopHoldSound(); droid.classList.remove('pulse'); });
-            droid.addEventListener('touchstart', (e) => { e.stopPropagation(); startHoldSound(); });
-            droid.addEventListener('touchend', (e) => { e.stopPropagation(); clearTimeout(holdTimeout); stopHoldSound(); droid.classList.remove('pulse'); });
-            
-            droid.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (isHolding) return;
-                const now = new Date().getTime();
-                if (now - lastTapTime > 1500) tapCount = 0;
-                tapCount++;
-                lastTapTime = now;
-                if (tapCount >= 3) {
-                    getMessage('love');
-                    tapCount = 0;
-                } else {
-                    playSound('default');
-                    showSpeechBubble();
+            // Create an Audio object for each button's data-audio-src
+            playButtons.forEach(button => {
+                const audioSrc = button.dataset.audioSrc;
+                if (audioSrc) {
+                    const audio = new Audio(audioSrc);
+                    audios[audioSrc] = audio;
+
+                    // Add a listener for when the audio finishes playing
+                    audio.addEventListener('ended', () => {
+                        const playIcon = button.querySelector('.play-icon');
+                        const pauseIcon = button.querySelector('.pause-icon');
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                    });
                 }
             });
 
-            document.getElementById('sound-toggle').addEventListener('click', toggleAmbientSound);
-            
-            const buttons = document.querySelectorAll('.button[data-look]');
-            const droidElement = document.getElementById('r2d2-droid');
-            buttons.forEach(button => {
-                button.addEventListener('mouseover', () => {
-                    const direction = button.getAttribute('data-look');
-                    droidElement.classList.remove('look-left', 'look-right', 'look-center');
-                    droidElement.classList.add(`look-${direction}`);
-                });
-                button.addEventListener('mouseout', () => {
-                    droidElement.classList.remove('look-left', 'look-right');
+            // Add the click event listener to each button
+            playButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const audioSrc = button.dataset.audioSrc;
+                    const audio = audios[audioSrc];
+                    const playIcon = button.querySelector('.play-icon');
+                    const pauseIcon = button.querySelector('.pause-icon');
+
+                    if (audio.paused) {
+                        // Pause all other audios before playing this one
+                        Object.values(audios).forEach(otherAudio => {
+                            if (otherAudio !== audio && !otherAudio.paused) {
+                                otherAudio.pause();
+                                // Reset the icons for all other buttons
+                                const otherButton = document.querySelector(`[data-audio-src="${otherAudio.src}"]`);
+                                if (otherButton) {
+                                    otherButton.querySelector('.play-icon').classList.remove('hidden');
+                                    otherButton.querySelector('.pause-icon').classList.add('hidden');
+                                }
+                            }
+                        });
+
+                        // Play the clicked audio
+                        audio.play();
+                        playIcon.classList.add('hidden');
+                        pauseIcon.classList.remove('hidden');
+                    } else {
+                        // Pause the current audio
+                        audio.pause();
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                    }
                 });
             });
-
-            document.body.addEventListener('click', initAudioContext, { once: true });
         };
     </script>
+
 </body>
 </html>
