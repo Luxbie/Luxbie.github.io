@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perennial Garden Audio Tour</title>
+    <title>The Laskett Garden Audio Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,20 +19,24 @@
         .play-button:active {
             transform: scale(0.95);
         }
+        .text-perennial-green {
+            color: #006400;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
     <div class="bg-white rounded-3xl shadow-xl max-w-2xl w-full p-8 space-y-8">
         <header class="text-center">
-            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800">Perennial Garden Audio Tour</h1>
-            <p class="mt-2 text-lg text-gray-500">Press play to listen to each part of the tour.</p>
+            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800">The Laskett Garden Audio Tour</h1>
+            <p class="mt-2 text-lg text-gray-500">Welcome to the autobiographical garden of Sir Roy Strong and Julia Trevelyan Oman. Press play to listen to each part of your tour.</p>
         </header>
 
-        <!-- Tour Stop 1 -->
+        <!-- Tour Stop 1 - Introduction -->
         <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <img src="https://placehold.co/600x400/D1B191/FFFFFF?text=Tour+Stop+1" alt="Placeholder image for the first tour stop" class="w-full h-full object-cover">
+                <!-- Placeholder for a general view of the garden, using a green from the Perennial brand -->
+                <img src="https://placehold.co/600x400/006400/FFFFFF?text=The+Laskett+Garden+Entrance" alt="Image of The Laskett Garden entrance" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
                 <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Intro.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
                     <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
@@ -44,14 +48,15 @@
             </div>
             <div class="mt-4 text-center">
                 <h2 class="text-xl font-medium text-gray-700">Tour Introduction</h2>
-                <p class="mt-2 text-gray-600">Welcome to the Perennial Garden! This audio provides a brief overview of the tour and what you can expect to see and hear today.</p>
+                <p class="mt-2 text-gray-600">Welcome to The Laskett Garden, the creation of Sir Roy Strong and his late wife, Julia Trevelyan Oman. This audio provides an overview of what makes this garden a living work of art.</p>
             </div>
         </div>
 
-        <!-- Tour Stop 2 -->
+        <!-- Tour Stop 2 - The Victoria and Albert Temple -->
         <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <img src="https://placehold.co/600x400/91C4D1/FFFFFF?text=Tour+Stop+2" alt="Placeholder image for the second tour stop" class="w-full h-full object-cover">
+                <!-- Placeholder for the Victoria and Albert Temple -->
+                <img src="https://placehold.co/600x400/006400/FFFFFF?text=Victoria+and+Albert+Temple" alt="Image of the Victoria and Albert Temple at The Laskett" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
                 <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area1.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
                     <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
@@ -62,15 +67,16 @@
                 </button>
             </div>
             <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">The Rose Garden</h2>
-                <p class="mt-2 text-gray-600">Discover the history and unique varieties of roses that flourish in this vibrant section of the garden. Learn how we care for these delicate blooms.</p>
+                <h2 class="text-xl font-medium text-gray-700">The Victoria and Albert Temple</h2>
+                <p class="mt-2 text-gray-600">This iconic temple was installed to commemorate Sir Roy Strong's retirement. Learn the fascinating story behind this focal point of the garden.</p>
             </div>
         </div>
 
-        <!-- Tour Stop 3 -->
+        <!-- Tour Stop 3 - The Rose Garden -->
         <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
             <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <img src="https://placehold.co/600x400/91D1A4/FFFFFF?text=Tour+Stop+3" alt="Placeholder image for the third tour stop" class="w-full h-full object-cover">
+                <!-- Placeholder for a section of the rose garden -->
+                <img src="https://placehold.co/600x400/006400/FFFFFF?text=The+Rose+Garden" alt="Image of The Rose Garden at The Laskett" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
                 <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Area2.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
                     <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
@@ -81,8 +87,8 @@
                 </button>
             </div>
             <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">The Butterfly Habitat</h2>
-                <p class="mt-2 text-gray-600">Explore the plants and flowers specifically chosen to attract and sustain local butterfly populations. Listen to the sounds of nature.</p>
+                <h2 class="text-xl font-medium text-gray-700">The Rose Garden</h2>
+                <p class="mt-2 text-gray-600">A vibrant and theatrical space, the rose garden is a key feature of The Laskett. This section explains the care and history of this beautiful space, which is designed to be in bloom throughout the year.</p>
             </div>
         </div>
 
