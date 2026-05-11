@@ -1,150 +1,320 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Laskett Garden Audio Tour</title>
+    <title>Heritage Garden Club</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7fafc;
-        }
-        .play-button {
-            transition: transform 0.2s ease-in-out;
-        }
-        .play-button:active {
-            transform: scale(0.95);
-        }
-        .text-perennial-green {
-            color: #006400;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
-
-    <div class="bg-white rounded-3xl shadow-xl max-w-2xl w-full p-8 space-y-8">
-        <header class="text-center">
-            <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/perennial-logo.png" alt="Perennial Logo" class="mx-auto h-24 mb-4">
-            <h1 class="text-3xl sm:text-4xl font-semibold text-gray-800">The Laskett Garden Audio Tour</h1>
-            <p class="mt-2 text-lg text-gray-500">Welcome to the autobiographical garden of Sir Roy Strong and Julia Trevelyan Oman. Press play to listen to each part of your tour.</p>
-        </header>
-
-        <!-- Tour Stop 1 - Introduction -->
-        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
-            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/1.jpg" alt="Image of The Laskett Garden entrance" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
-                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/Intro.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
-                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                    <span class="absolute hidden text-xs text-red-500 font-semibold text-center mt-20">Error loading audio.</span>
-                </button>
-            </div>
-            <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">Tour Introduction</h2>
-                <p class="mt-2 text-gray-600">Welcome to The Laskett Garden, the creation of Sir Roy Strong and his late wife, Julia Trevelyan Oman. This audio provides an overview of what makes this garden a living work of art.</p>
-            </div>
-        </div>
-
-        <!-- Tour Stop 2 - Facing the House -->
-        <div class="tour-stop bg-gray-50 rounded-2xl shadow-inner p-6">
-            <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-md">
-                <img src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/2.jpg" alt="Image of the view of the house from the garden" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/006400/FFFFFF?text=Image+Not+Available';">
-                <button data-audio-src="https://sharpfiles.blob.core.windows.net/clientfiles/Perennial/FacingtheHouse.mp3" class="play-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-gray-800 rounded-full w-20 h-20 sm:w-24 sm:h-24 shadow-lg flex items-center justify-center hover:scale-105 transition-all">
-                    <svg class="w-10 h-10 play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    <svg class="hidden w-10 h-10 pause-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                    </svg>
-                    <span class="absolute hidden text-xs text-red-500 font-semibold text-center mt-20">Error loading audio.</span>
-                </button>
-            </div>
-            <div class="mt-4 text-center">
-                <h2 class="text-xl font-medium text-gray-700">Facing the House</h2>
-                <p class="mt-2 text-gray-600">This section guides you through the beautiful views and elements on the side of the house, offering a new perspective on the garden's design and features.</p>
-            </div>
-        </div>
-    </div>
-
+    <!-- Using larger, more legible serif fonts for a classic feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    
     <script>
-        window.onload = function() {
-            // Find all the buttons that will control the audio playback
-            const playButtons = document.querySelectorAll('.play-button');
-            const audios = {}; // Object to store audio elements
-
-            // Create an Audio object for each button's data-audio-src
-            playButtons.forEach(button => {
-                const audioSrc = button.dataset.audioSrc;
-                if (audioSrc) {
-                    const audio = new Audio(audioSrc);
-                    audios[audioSrc] = audio;
-
-                    // Add a listener for when the audio finishes playing
-                    audio.addEventListener('ended', () => {
-                        const playIcon = button.querySelector('.play-icon');
-                        const pauseIcon = button.querySelector('.pause-icon');
-                        playIcon.classList.remove('hidden');
-                        pauseIcon.classList.add('hidden');
-                    });
-                }
-            });
-
-            // Add the click event listener to each button
-            playButtons.forEach(button => {
-                button.addEventListener('click', async () => {
-                    const audioSrc = button.dataset.audioSrc;
-                    const audio = audios[audioSrc];
-                    const playIcon = button.querySelector('.play-icon');
-                    const pauseIcon = button.querySelector('.pause-icon');
-                    const errorSpan = button.querySelector('span');
-
-                    // Hide any previous error messages
-                    errorSpan.classList.add('hidden');
-
-                    if (audio.paused) {
-                        // Pause all other audios before playing this one
-                        Object.values(audios).forEach(otherAudio => {
-                            if (otherAudio !== audio && !otherAudio.paused) {
-                                otherAudio.pause();
-                                // Reset the icons for all other buttons
-                                const otherButton = document.querySelector(`[data-audio-src="${otherAudio.src}"]`);
-                                if (otherButton) {
-                                    otherButton.querySelector('.play-icon').classList.remove('hidden');
-                                    otherButton.querySelector('.pause-icon').classList.add('hidden');
-                                }
-                            }
-                        });
-
-                        try {
-                            // Play the clicked audio
-                            await audio.play();
-                            playIcon.classList.add('hidden');
-                            pauseIcon.classList.remove('hidden');
-                        } catch (error) {
-                            console.error("Error playing audio:", error);
-                            errorSpan.textContent = "Error playing audio.";
-                            errorSpan.classList.remove('hidden');
-                            playIcon.classList.remove('hidden');
-                            pauseIcon.classList.add('hidden');
-                        }
-                    } else {
-                        // Pause the current audio
-                        audio.pause();
-                        playIcon.classList.remove('hidden');
-                        pauseIcon.classList.add('hidden');
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Source Sans Pro', 'sans-serif'], // Highly legible sans-serif
+                        serif: ['Libre Baskerville', 'serif'], // Classic, readable serif
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f4f5f0',  // Warm off-white
+                            100: '#e6e9df',
+                            500: '#4a6741',  // Muted heritage green
+                            600: '#3a5233',
+                            700: '#2b3d26',
+                            800: '#1d2919',
+                            900: '#0f140d',
+                        },
+                        paper: '#fdfbf7' // Very subtle warm paper color
                     }
-                });
-            });
-        };
+                }
+            }
+        }
     </script>
+</head>
+<body class="bg-paper text-stone-800 font-sans antialiased flex flex-col min-h-screen text-lg">
 
+    <!-- Navigation -->
+    <nav class="bg-white border-b-4 border-brand-600 fixed w-full z-50 shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 items-center transition-all duration-300" id="navbar-content">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i data-lucide="leaf" class="w-8 h-8 text-brand-600"></i>
+                    <div>
+                        <span class="block font-serif font-bold text-2xl text-brand-800 leading-none">Heritage</span>
+                        <span class="block text-sm font-semibold tracking-widest text-stone-500 uppercase mt-1">Garden Club</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#history" class="text-stone-700 hover:text-brand-600 font-semibold text-lg transition-colors py-2">Our History</a>
+                    <a href="#news" class="text-stone-700 hover:text-brand-600 font-semibold text-lg transition-colors py-2">News & Events</a>
+                    <!-- Prominent Join Button Top Right -->
+                    <a href="#join" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-md font-bold text-lg transition-colors shadow-md flex items-center gap-2">
+                        <i data-lucide="user-plus" class="w-5 h-5"></i> Become a Member
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-brand-700 hover:bg-brand-50 rounded-lg p-3 focus:outline-none border border-brand-200">
+                        <i data-lucide="menu" class="w-8 h-8" id="menu-icon"></i>
+                        <span class="sr-only">Open Menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-stone-200 absolute w-full shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#history" class="block px-4 py-4 rounded-md text-xl font-semibold text-stone-800 hover:bg-brand-50 mobile-link border-b border-stone-100">Our History</a>
+                <a href="#news" class="block px-4 py-4 rounded-md text-xl font-semibold text-stone-800 hover:bg-brand-50 mobile-link border-b border-stone-100">News & Events</a>
+                <a href="#join" class="block px-4 py-4 mt-4 text-center rounded-md text-xl font-bold bg-brand-600 text-white hover:bg-brand-700 mobile-link flex items-center justify-center gap-2">
+                    <i data-lucide="user-plus" class="w-5 h-5"></i> Become a Member
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 md:pt-44 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+            <div class="flex-1 space-y-6 text-center md:text-left">
+                <div class="inline-block border-b-2 border-brand-500 pb-1 mb-4">
+                    <span class="text-brand-700 font-bold uppercase tracking-widest text-sm">Established 1952</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 leading-tight">
+                    Rooted in <br>
+                    <span class="text-brand-600">Tradition.</span>
+                </h1>
+                <p class="text-xl text-stone-700 max-w-2xl mx-auto md:mx-0 leading-relaxed">
+                    For over 70 years, we have gathered to share our love of gardening, swap seeds, and cultivate lifelong friendships. We welcome gardeners of all ages to join our historic community.
+                </p>
+            </div>
+            <div class="flex-1 w-full">
+                <!-- Sepia-toned classic image -->
+                <div class="relative p-4 bg-white shadow-xl rounded-sm border border-stone-200 transform md:rotate-2">
+                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Vintage watering can in garden" class="w-full h-[350px] md:h-[450px] object-cover sepia-[.30] contrast-125">
+                    <div class="absolute bottom-6 right-6 bg-white/90 px-4 py-2 text-sm font-serif italic text-stone-700 shadow">
+                        Preserving nature's beauty
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="py-20 bg-brand-50 border-y border-brand-100">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <i data-lucide="book-open" class="w-10 h-10 text-brand-600 mx-auto mb-4"></i>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-stone-900">Our Proud History</h2>
+            </div>
+            
+            <div class="bg-white p-8 md:p-12 rounded-lg shadow-sm border border-stone-200 space-y-6 text-lg text-stone-700 leading-relaxed font-serif">
+                <p>
+                    <span class="text-4xl font-bold text-brand-600 float-left mr-3 mt-1 line-height-1">F</span>ounded in the spring of 1952 by a small group of local neighbors, our club began as a humble seed-sharing circle on a front porch. Over the decades, we have grown into a cornerstone of the community, dedicated to the beautification of our town and the preservation of heirloom plant varieties.
+                </p>
+                <p>
+                    Throughout the years, our members have maintained the historic rose gardens at the town library, planted hundreds of trees in local parks, and passed down invaluable, time-tested gardening wisdom from generation to generation.
+                </p>
+                <p>
+                    While the world has changed rapidly around us, our core mission remains exactly the same as it was over seventy years ago: to foster a love of horticulture, to respect the earth, and to enjoy the simple, quiet camaraderie of fellow gardeners.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Events (Instagram Link) -->
+    <section id="news" class="py-20 bg-paper">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                
+                <div class="flex-1 space-y-6">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-stone-900">Latest News & Events</h2>
+                    <p class="text-xl text-stone-700 leading-relaxed">
+                        To ensure you always have the most accurate and up-to-date information without us needing to constantly update this website, we post all of our meeting times, event announcements, and latest garden photos directly to our Instagram page.
+                    </p>
+                    <p class="text-xl text-stone-700 leading-relaxed">
+                        <strong>You do not need an account</strong> to click the link and view our latest updates!
+                    </p>
+                    
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 bg-stone-900 hover:bg-brand-600 text-white px-8 py-4 rounded-md font-bold text-xl transition-colors shadow-lg mt-4">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                        View our Noticeboard
+                    </a>
+                </div>
+
+                <!-- Fake Instagram Card serving as a visual link -->
+                <div class="flex-1 w-full max-w-sm mx-auto">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="block bg-white border border-stone-200 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all transform hover:-translate-y-1 group">
+                        <!-- Card Header -->
+                        <div class="flex items-center p-4 border-b border-stone-100">
+                            <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center text-brand-600 mr-3">
+                                <i data-lucide="leaf" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-stone-900 leading-none">heritagegardenclub</p>
+                                <p class="text-xs text-stone-500 mt-1">Latest Update</p>
+                            </div>
+                        </div>
+                        <!-- Card Image -->
+                        <div class="relative h-64 bg-stone-100 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4ce11?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Recent club meeting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="bg-white text-stone-900 px-4 py-2 rounded-full font-bold flex items-center gap-2">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i> View Post
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Card Footer -->
+                        <div class="p-4 bg-stone-50">
+                            <p class="text-stone-700 line-clamp-2">
+                                <strong>heritagegardenclub</strong> Click here to see our upcoming schedule for this month's meetings and the annual plant sale! 🌱📋
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Section -->
+    <section id="join" class="py-20 bg-brand-700 text-white border-t-8 border-brand-900">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Become a Member</h2>
+                <p class="text-xl text-brand-100">
+                    We welcome gardeners of all experience levels. Review our membership details below and reach out to join our historic community.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Pricing & Terms Card -->
+                <div class="bg-white p-8 md:p-10 rounded-lg shadow-2xl text-stone-800">
+                    <div class="flex items-center gap-3 mb-6 border-b-2 border-brand-100 pb-4">
+                        <i data-lucide="info" class="w-8 h-8 text-brand-600"></i>
+                        <h3 class="text-2xl font-serif font-bold">Membership Details</h3>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold text-brand-700 mb-2">Annual Dues</h4>
+                        <p class="text-2xl font-serif font-bold text-stone-900 mb-1">$25.00 <span class="text-lg text-stone-500 font-sans font-normal">per year</span></p>
+                        <p class="text-stone-600 leading-relaxed">Dues are collected every January and go directly towards our community beautification projects, seed banks, and meeting refreshments.</p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xl font-bold text-brand-700 mb-3">Benefits & Terms</h4>
+                        <ul class="space-y-4 text-stone-700">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-6 h-6 text-brand-500 mt-0.5 shrink-0"></i>
+                                <span>Monthly educational meetings featuring guest speakers and master gardeners.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-6 h-6 text-brand-500 mt-0.5 shrink-0"></i>
+                                <span>Exclusive access to the Heritage Seed Bank and our annual spring cuttings swap.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-6 h-6 text-brand-500 mt-0.5 shrink-0"></i>
+                                <span>Members are encouraged to volunteer at least twice a year for local town planting projects.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- How to Join Card -->
+                <div class="bg-brand-800 p-8 md:p-10 rounded-lg shadow-2xl flex flex-col justify-center text-center border-2 border-brand-600">
+                    <i data-lucide="mail-open" class="w-16 h-16 text-brand-400 mx-auto mb-6"></i>
+                    <h3 class="text-2xl md:text-3xl font-serif font-bold mb-4">Ready to Join?</h3>
+                    <p class="text-lg text-brand-100 mb-10 leading-relaxed">
+                        To sign up, simply send us an email with your name and phone number. Our welcoming committee will reply with instructions for your first meeting and how to submit your annual dues.
+                    </p>
+                    <a href="mailto:membership@heritagegardenclub.org?subject=New Membership Inquiry" class="bg-white text-brand-900 hover:bg-brand-50 font-bold py-5 px-8 rounded-md text-xl transition-colors shadow-xl flex justify-center items-center gap-3 w-full border-b-4 border-stone-300 active:border-b-0 active:translate-y-1">
+                        <i data-lucide="mail" class="w-6 h-6"></i> Email Us to Join
+                    </a>
+                    <p class="mt-8 text-brand-200">
+                        Or reach out directly at:<br>
+                        <a href="mailto:membership@heritagegardenclub.org" class="font-bold text-white hover:underline mt-1 inline-block">membership@heritagegardenclub.org</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-300 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <i data-lucide="leaf" class="w-6 h-6 text-brand-500"></i>
+                <span class="font-serif font-bold text-2xl text-white tracking-tight">Heritage Garden Club</span>
+            </div>
+            <p class="text-lg text-stone-400">
+                Preserving the beauty of our community since 1952.
+            </p>
+            <div class="pt-6 border-t border-stone-800 text-sm text-stone-500">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Heritage Garden Club. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Navbar Shrink Effect on Scroll
+        const navbar = document.getElementById('navbar');
+        const navContent = document.getElementById('navbar-content');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                navContent.classList.remove('h-24');
+                navContent.classList.add('h-16');
+            } else {
+                navContent.classList.add('h-24');
+                navContent.classList.remove('h-16');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('hidden');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.add('hidden');
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+
+        // Close mobile menu when clicking a link
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (isMenuOpen) toggleMenu();
+            });
+        });
+    </script>
 </body>
 </html>
